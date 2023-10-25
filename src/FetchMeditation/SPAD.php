@@ -3,22 +3,22 @@
 namespace FetchMeditation;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-require_once __DIR__ . '/JFTEntry.php';
+require_once __DIR__ . '/SPADEntry.php';
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
-class JFT {
-    private string $language;
+class SPAD {
+    private string $outputType;
     public function __construct($settings = null)
     {
-        $this->language = $settings->language;
+        $this->outputType = $settings->outputType;
     }
 
     public function fetch()
     {
         $data = $this->getData();
-        $entry = new JFTEntry(
+        $entry = new SPADEntry(
             $data['date'],
             $data['title'],
             $data['page'],
@@ -33,10 +33,7 @@ class JFT {
 
     public function getData(): array
     {
-        $data = [];
-        if ($this->language == 'en') {
-            $data = $this->getEnglish();
-        }
+        $data = $this->getSpad();
         return $data;
     }
 
@@ -62,9 +59,9 @@ class JFT {
         }
     }
 
-    public function getEnglish(): array
+    public function getSpad(): array
     {
-        $jft_url = 'https://www.jftna.org/jft/';
+        $jft_url = 'https://spadna.org';
         libxml_use_internal_errors(true);
         $data = $this->httpGet($jft_url);
         libxml_clear_errors();
@@ -72,7 +69,7 @@ class JFT {
         $domDocument = new \DOMDocument();
         $domDocument->validateOnParse = true;
         $domDocument->loadHTML($data);
-        $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
+        $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'divider', 'thought', 'copyright'];
         $result = [];
         $xpath = new \DOMXPath($domDocument);
         foreach ($domDocument->getElementsByTagName('tr') as $i => $element) {
@@ -96,6 +93,9 @@ class JFT {
             } else {
                 $result[$jftKeys[$i]] = $formattedElement;
             }
+        }
+        if (array_key_exists('divider', $result)) {
+            unset($result['divider']);
         }
         $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
 

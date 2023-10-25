@@ -2,7 +2,7 @@
 
 namespace FetchMeditation;
 
-class JFTEntry {
+class SPADEntry {
     public string $date;
     public string $title;
     public string $page;
@@ -39,26 +39,13 @@ class JFTEntry {
     }
 
     public function getHtml() {
-        $thought = str_replace('Just for today: ', '', $this->thought);
         $paragraphs = "";
-
         foreach ($this->content as $c) {
-            $paragraphs .= "<p>{$c}</p><br>";
+            $paragraph = str_replace("--", "&mdash;", $c);
+            $paragraphs .= "<p>{$paragraph}</p>";
         }
 
         return <<<HTML
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Just for Today Meditation</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=yes">
-    <meta http-equiv="expires" content="-1">
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Cache-Control" content="no-cache" />
-    <meta charset="UTF-8" />
-</head>
-<body>
 <table align="center">
     <tr>
         <td align="left"><h2>{$this->date}</h2></td>
@@ -70,7 +57,7 @@ class JFTEntry {
         <td align="center">{$this->page}<br><br></td>
     </tr>
     <tr>
-        <td align="left"><i>{$this->quote}</i><br><br></td>
+        <td align="left">{$this->quote}<br><br></td>
     </tr>
     <tr>
         <td align="center">{$this->source}<br><br></td>
@@ -78,15 +65,16 @@ class JFTEntry {
     <tr>
         <td align="left">{$paragraphs}</td>
     </tr>
-    <tr>
-        <td align="left"><b>Just for Today: </b>{$thought}<br><br></td>
+  <tr>
+        <td align="center">&mdash; &nbsp;  &nbsp; &mdash; &nbsp;  &nbsp; &mdash; &nbsp;  &nbsp; &mdash; &nbsp;  &nbsp; &mdash;<br><br></td>
+    </tr>    <tr>
+        <td align="left">{$this->thought}<br><br></td>
     </tr>
+
     <tr>
         <td align="center">{$this->copyright}</td>
     </tr>
 </table>
-</body>
-</html>
 HTML;
     }
 
@@ -94,22 +82,22 @@ HTML;
         $paragraphs = "";
         $count = 1;
         foreach ($this->content as $c) {
-            $paragraphs .= "<p id=\"jft-content-$count\" class=\"jft-rendered-element\">$c</p>";
+            $paragraphs .= "<p id=\"spad-content-$count\" class=\"spad-rendered-element\">$c</p>";
             $count++;
         }
 
         return <<<CSS
-<div id="jft-container" class="jft-rendered-element">
-    <div id="jft-date" class="jft-rendered-element">{$this->date}</div>
-    <div id="jft-title" class="jft-rendered-element">{$this->title}</div>
-    <div id="jft-page" class="jft-rendered-element">{$this->page}</div>
-    <div id="jft-quote" class="jft-rendered-element">{$this->quote}</div>
-    <div id="jft-quote-source" class="jft-rendered-element">{$this->source}</div>
-    <div id="jft-content" class="jft-rendered-element">
+<div id="spad-container" class="spad-rendered-element">
+    <div id="spad-date" class="spad-rendered-element">{$this->date}</div>
+    <div id="spad-title" class="spad-rendered-element">{$this->title}</div>
+    <div id="spad-page" class="spad-rendered-element">{$this->page}</div>
+    <div id="spad-quote" class="spad-rendered-element">{$this->quote}</div>
+    <div id="spad-quote-source" class="spad-rendered-element">{$this->source}</div>
+    <div id="spad-content" class="spad-rendered-element">
     {$paragraphs}
     </div>
-    <div id="jft-thought" class="jft-rendered-element">{$this->thought}</div>
-    <div id="jft-copyright" class="jft-rendered-element">{$this->copyright}</div>
+    <div id="spad-thought" class="spad-rendered-element">{$this->thought}</div>
+    <div id="spad-copyright" class="spad-rendered-element">{$this->copyright}</div>
 </div>
 CSS;
     }
