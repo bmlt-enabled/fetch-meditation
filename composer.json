@@ -1,5 +1,5 @@
 {
-    "name": "bmlt-enabled/fetch-meditation",
+    "name": "bmlt/fetch-meditation",
     "description": "Fetch Daily meditations",
     "type": "library",
     "license": "MIT",
