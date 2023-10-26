@@ -61,44 +61,27 @@ class SPAD
 
     private function getSpad(): array
     {
-        $jft_url = 'https://spadna.org';
         libxml_use_internal_errors(true);
-        $data = $this->httpGet($jft_url);
+        $data = $this->httpGet('https://spadna.org');
         libxml_clear_errors();
         libxml_use_internal_errors(false);
-        $domDocument = new \DOMDocument();
-        $domDocument->validateOnParse = true;
-        $domDocument->loadHTML($data);
-        $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'divider', 'thought', 'copyright'];
+        $doc = new \DOMDocument();
+        $doc->loadHTML($data);
+        $spadKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'divider', 'thought', 'copyright'];
         $result = [];
-        $xpath = new \DOMXPath($domDocument);
-        foreach ($domDocument->getElementsByTagName('tr') as $i => $element) {
-            $formattedElement = trim($element->nodeValue);
-            if ($i == 5) {
-                $values = [];
-                foreach ($xpath->query('//tr') as $row) {
-                    $rowValues = [];
-                    foreach ($xpath->query('td', $row) as $cell) {
-                        $innerHTML = '';
-                        $children = $cell->childNodes;
-                        foreach ($children as $child) {
-                            $innerHTML .= $child->ownerDocument->saveXML($child);
-                        }
-                        $rowValues[] = $innerHTML;
-                    }
-                    $values[] = $rowValues;
+        foreach ($doc->getElementsByTagName('td') as $i => $td) {
+            $nodeValue = trim($td->nodeValue);
+            if ($spadKeys[$i] === 'content') {
+                $innerHTML = '';
+                foreach ($td->childNodes as $child) {
+                    $innerHTML .= $td->ownerDocument->saveHTML($child);
                 }
-                $content = preg_split('/<br\s*\/?>/', $values[5][0], -1, PREG_SPLIT_NO_EMPTY);
-                $result["content"] = array_map('trim', $content);
-            } else {
-                $result[$jftKeys[$i]] = $formattedElement;
+                $result['content'] = array_map('trim', preg_split('/<br\s*\/?>/', $innerHTML, -1, PREG_SPLIT_NO_EMPTY));
+            } elseif ($spadKeys[$i] !== 'divider') {
+                $result[$spadKeys[$i]] = $nodeValue;
             }
         }
-        if (array_key_exists('divider', $result)) {
-            unset($result['divider']);
-        }
-        $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
-
+        $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
         return $result;
     }
 }

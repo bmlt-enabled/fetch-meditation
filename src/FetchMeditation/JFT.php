@@ -39,6 +39,7 @@ class JFT
             'es' => $this->getSpanish(),
             'pt' => $this->getPortuguese(),
             'it' => $this->getItalian(),
+            'ru' => $this->getRussian(),
             default => [],
         };
     }
@@ -67,41 +68,28 @@ class JFT
 
     private function getEnglish(): array
     {
-        $jft_url = 'https://www.jftna.org/jft/';
         libxml_use_internal_errors(true);
-        $data = $this->httpGet($jft_url);
+        $data = $this->httpGet('https://www.jftna.org/jft/');
         libxml_clear_errors();
         libxml_use_internal_errors(false);
-        $domDocument = new \DOMDocument();
-        $domDocument->validateOnParse = true;
-        $domDocument->loadHTML($data);
+        $doc = new \DOMDocument();
+        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
         $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
         $result = [];
-        $xpath = new \DOMXPath($domDocument);
-        foreach ($domDocument->getElementsByTagName('tr') as $i => $element) {
-            $formattedElement = trim($element->nodeValue);
-            if ($i == 5) {
-                $values = [];
-                foreach ($xpath->query('//tr') as $row) {
-                    $rowValues = [];
-                    foreach ($xpath->query('td', $row) as $cell) {
-                        $innerHTML = '';
-                        $children = $cell->childNodes;
-                        foreach ($children as $child) {
-                            $innerHTML .= $child->ownerDocument->saveXML($child);
-                        }
-                        $rowValues[] = $innerHTML;
-                    }
-                    $values[] = $rowValues;
+        foreach ($doc->getElementsByTagName('td') as $i => $td) {
+            if ($jftKeys[$i] === 'content') {
+                $innerHTML = '';
+                foreach ($td->childNodes as $child) {
+                    $innerHTML .= $td->ownerDocument->saveHTML($child);
                 }
-                $content = preg_split('/<br\s*\/?>/', $values[5][0], -1, PREG_SPLIT_NO_EMPTY);
-                $result["content"] = array_map('trim', $content);
+                $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
             } else {
-                $result[$jftKeys[$i]] = $formattedElement;
+                $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
         }
         $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
-
         return $result;
     }
 
@@ -310,6 +298,32 @@ class JFT
         $resultArray['source'] =  $quoteParts[1] ?? $resultArray['source'];
         return $resultArray;
     }
+
+    private function getRussian()
+    {
+        libxml_use_internal_errors(true);
+        $data = $this->httpGet('https://na-russia.org/eg');
+        $doc = new \DOMDocument();
+        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
+        $jftKeys = ['date', 'title', 'quote', 'source', 'content', 'thought', 'page'];
+        $result = [];
+        foreach ($doc->getElementsByTagName('td') as $i => $td) {
+            if ($jftKeys[$i] === 'content') {
+                $innerHTML = '';
+                foreach ($td->childNodes as $child) {
+                    $innerHTML .= $td->ownerDocument->saveHTML($child);
+                }
+                $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
+            } else {
+                $result[$jftKeys[$i]] = trim($td->nodeValue);
+            }
+        }
+        $result['copyright'] = '';
+        return $result;
+    }
+
     private static function getTimezoneDate(string $language, $format = 'md'): string
     {
         $timezoneMap = [
