@@ -91,7 +91,7 @@ class JFTEntry
         <td align="left">{$paragraphs}</td>
     </tr>
     <tr>
-        <td align="left"><b>Just for Today: </b>{$thought}<br><br></td>
+        <td align="left">{$thought}<br><br></td>
     </tr>
     <tr>
         <td align="center">{$this->copyright}</td>

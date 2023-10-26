@@ -8,10 +8,10 @@ use FetchMeditation\JFT;
 
 //echo "JFT\n\n";
 
-$settings = new JFTSettings(['language' => "es"]);
+$settings = new JFTSettings(['language' => "it"]);
 $jft = new JFT($settings);
 $entry = $jft->fetch();
-print_r($entry->stripTags());
+print_r($entry->getCss());
 
 //
 //echo "\n\nSPAD\n\n";

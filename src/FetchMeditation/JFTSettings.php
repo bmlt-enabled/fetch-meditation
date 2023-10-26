@@ -8,7 +8,7 @@ class JFTSettings
     public string $outputType = "html";
     public function __construct(array $settings = [])
     {
-        $validLanguages = ["en", "es", "pt"];
+        $validLanguages = ["en", "es", "pt", "it"];
         $validOutputTypes = ["json", "html", "block"];
 
         // Validate language
