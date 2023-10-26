@@ -8,7 +8,7 @@ use FetchMeditation\JFT;
 
 //echo "JFT\n\n";
 
-$settings = new JFTSettings(['language' => "fr"]);
+$settings = new JFTSettings(['language' => "ja"]);
 $jft = new JFT($settings);
 $entry = $jft->fetch();
 print_r($entry->getCss());

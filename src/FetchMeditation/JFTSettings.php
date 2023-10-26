@@ -9,7 +9,7 @@ class JFTSettings
 
     public function __construct(array $settings = [])
     {
-        $this->validLanguages = ["en", "es", "fr", "it", "pt", "ru", "sv"];
+        $this->validLanguages = ["en", "es", "fr", "it", "ja", "pt", "ru", "sv"];
 
         // Validate language
         if (isset($settings['language']) && in_array($settings['language'], $this->validLanguages)) {
