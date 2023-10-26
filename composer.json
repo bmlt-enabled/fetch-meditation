@@ -1,6 +1,15 @@
 {
     "name": "bmlt/fetch-meditation",
     "description": "Fetch Daily meditations",
+    "keywords": [
+        "PHP",
+        "NA",
+        "Meditation",
+        "JFT",
+        "SPAD",
+        "BMLT"
+    ],
+    "homepage": "https://github.com/bmlt-enabled/fetch-meditation",
     "type": "library",
     "license": "MIT",
     "authors": [
