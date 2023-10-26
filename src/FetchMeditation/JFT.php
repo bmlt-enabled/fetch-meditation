@@ -109,7 +109,7 @@ class JFT
     public function getSpanish()
     {
         libxml_use_internal_errors(true);
-        $data = $this->httpGet("https://forozonalatino.org/wp-content/uploads/meditaciones/10/25.html");
+        $data = $this->httpGet('https://forozonalatino.org/wp-content/uploads/meditaciones/' . $this->getTimezoneDate('spanish', 'm/d') . '.html');
         $doc = new \DOMDocument();
         $doc->loadHTML($data);
         libxml_clear_errors();
@@ -170,5 +170,20 @@ class JFT
         $content['thought']  = 'Sólo por Hoy: ' . trim($extractedThought);
 
         return $content;
+    }
+
+    protected function getTimezoneDate(string $language, $format = 'md'): string
+    {
+        $timezoneMap = [
+            'german' => 'Europe/Berlin',
+            'swedish' => 'Europe/Stockholm',
+            'danish' => 'Europe/Copenhagen',
+            'italian' => 'Europe/Rome',
+            'spanish' => 'America/Mexico_City',
+        ];
+
+        $timezone = array_key_exists($language, $timezoneMap) ? new \DateTimeZone($timezoneMap[$language]) : new \DateTimeZone('America/New_York');
+        $date = new \DateTime('now', $timezone);
+        return $date->format($format);
     }
 }
