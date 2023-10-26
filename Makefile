@@ -22,6 +22,9 @@ test: composer ## PHP Unit Tests
 	vendor/bin/phpunit tests/JFTEntryTest.php
 	vendor/bin/phpunit tests/JFTTest.php
 	vendor/bin/phpunit tests/JFTSettingsTest.php
+	vendor/bin/phpunit tests/SPADEntryTest.php
+	vendor/bin/phpunit tests/SPADTest.php
+	vendor/bin/phpunit tests/SPADSettingsTest.php
 
 .PHONY: docs
 docs:  ## Generate Docs
