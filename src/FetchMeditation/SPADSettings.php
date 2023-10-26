@@ -4,19 +4,19 @@ namespace FetchMeditation;
 
 class SPADSettings
 {
-    public string $outputType = "html";
+    public string $language = "en";
+
     public function __construct(array $settings = [])
     {
-        $validOutputTypes = ["json", "html", "block"];
+        $validLanguages = ["en"];
 
-        // Validate output type option based on language
-        if (isset($settings['outputType'])) {
-            if (in_array($settings['outputType'], $validOutputTypes)) {
-                $this->outputType = $settings['outputType'];
-            }
+        // Validate language
+        if (isset($settings['language']) && in_array($settings['language'], $validLanguages)) {
+            $this->language = $settings['language'];
         }
+
         return [
-            'outputType' => $this->outputType,
+            'language' => $this->language,
         ];
     }
 }

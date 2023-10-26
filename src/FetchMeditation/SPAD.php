@@ -10,10 +10,10 @@ use GuzzleHttp\Exception\RequestException;
 
 class SPAD
 {
-    private string $outputType;
+    private string $language;
     public function __construct($settings = null)
     {
-        $this->outputType = $settings->outputType;
+        $this->language = $settings->language;
     }
 
     public function fetch()

@@ -20,3 +20,7 @@ lint-fix: composer ## PHP Lint Fix
 .PHONY: test
 test: composer ## PHP Unit Tests
 	vendor/bin/phpunit tests/ConfigTest.php
+
+.PHONY: docs
+docs:  ## Generate Docs
+	docker run --rm -v $(shell pwd):/data phpdoc/phpdoc:3 --ignore=vendor/ run -d src/ -t docs/

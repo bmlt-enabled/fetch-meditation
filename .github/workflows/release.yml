@@ -1,0 +1,24 @@
+name: 'release'
+
+on:
+  push:
+    tags: [ '*' ]
+    branches: [ 'main' ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Check out code 🛒
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 🐫
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: PHPCS checker 🧹
+        id: php-codesniffer
+        run: make lint
