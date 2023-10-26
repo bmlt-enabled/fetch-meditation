@@ -35,10 +35,21 @@ class SPADEntry
 
     public function getJson(): string
     {
-        return json_encode($this);
+        return json_encode((array)$this);
     }
 
-    public function getHtml()
+    public function stripTags(): array
+    {
+        return array_map(function ($item) {
+            if (is_array($item)) {
+                return array_map('strip_tags', $item);
+            } else {
+                return strip_tags((string) $item);
+            }
+        }, (array)$this);
+    }
+
+    public function getHtml(): string
     {
         $paragraphs = "";
         foreach ($this->content as $c) {
@@ -79,7 +90,7 @@ class SPADEntry
 HTML;
     }
 
-    public function getCss()
+    public function getCss(): string
     {
         $paragraphs = "";
         $count = 1;

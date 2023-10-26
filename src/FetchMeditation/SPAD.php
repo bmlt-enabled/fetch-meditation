@@ -32,13 +32,12 @@ class SPAD
         return $entry;
     }
 
-    public function getData(): array
+    private function getData(): array
     {
-        $data = $this->getSpad();
-        return $data;
+        return $this->getSpad();
     }
 
-    public function httpGet(string $url): string
+    private function httpGet(string $url): string
     {
         try {
             $client = new Client();
@@ -60,7 +59,7 @@ class SPAD
         }
     }
 
-    public function getSpad(): array
+    private function getSpad(): array
     {
         $jft_url = 'https://spadna.org';
         libxml_use_internal_errors(true);

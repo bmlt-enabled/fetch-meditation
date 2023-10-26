@@ -32,7 +32,7 @@ class JFT
         return $entry;
     }
 
-    public function getData(): array
+    private function getData(): array
     {
         $data = [];
         if ($this->language == 'en') {
@@ -47,7 +47,7 @@ class JFT
         return $data;
     }
 
-    public function httpGet(string $url): string
+    private function httpGet(string $url): string
     {
         try {
             $client = new Client();
@@ -69,7 +69,7 @@ class JFT
         }
     }
 
-    public function getEnglish(): array
+    private function getEnglish(): array
     {
         $jft_url = 'https://www.jftna.org/jft/';
         libxml_use_internal_errors(true);
@@ -109,10 +109,10 @@ class JFT
         return $result;
     }
 
-    public function getSpanish()
+    private function getSpanish()
     {
         libxml_use_internal_errors(true);
-        $data = $this->httpGet('https://forozonalatino.org/wp-content/uploads/meditaciones/' . $this->getTimezoneDate('spanish', 'm/d') . '.html');
+        $data = $this->httpGet('https://forozonalatino.org/wp-content/uploads/meditaciones/' . static::getTimezoneDate('spanish', 'm/d') . '.html');
         $doc = new \DOMDocument();
         $doc->loadHTML('<?xml encoding="ISO-8859-1">' . $data);
         libxml_clear_errors();
@@ -175,7 +175,7 @@ class JFT
         return $content;
     }
 
-    public function getPortuguese()
+    private function getPortuguese()
     {
         libxml_use_internal_errors(true);
         $data = $this->httpGet('https://www.na.org.br/meditacao/');
@@ -249,7 +249,7 @@ class JFT
         return $content;
     }
 
-    protected function getTimezoneDate(string $language, $format = 'md'): string
+    private static function getTimezoneDate(string $language, $format = 'md'): string
     {
         $timezoneMap = [
             'german' => 'Europe/Berlin',

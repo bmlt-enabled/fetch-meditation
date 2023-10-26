@@ -11,7 +11,7 @@ use FetchMeditation\JFT;
 $settings = new JFTSettings(['language' => "es"]);
 $jft = new JFT($settings);
 $entry = $jft->fetch();
-print_r($entry);
+print_r($entry->stripTags());
 
 //
 //echo "\n\nSPAD\n\n";
