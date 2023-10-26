@@ -8,7 +8,8 @@ require_once __DIR__ . '/SPADEntry.php';
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
-class SPAD {
+class SPAD
+{
     private string $outputType;
     public function __construct($settings = null)
     {

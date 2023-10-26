@@ -2,7 +2,8 @@
 
 namespace FetchMeditation;
 
-class JFTSettings {
+class JFTSettings
+{
     public string $language = "en";
     public string $outputType = "html";
     public function __construct(array $settings = [])

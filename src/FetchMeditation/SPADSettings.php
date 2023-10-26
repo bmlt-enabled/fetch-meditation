@@ -2,7 +2,8 @@
 
 namespace FetchMeditation;
 
-class SPADSettings {
+class SPADSettings
+{
     public string $outputType = "html";
     public function __construct(array $settings = [])
     {

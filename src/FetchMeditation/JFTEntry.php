@@ -2,7 +2,8 @@
 
 namespace FetchMeditation;
 
-class JFTEntry {
+class JFTEntry
+{
     public string $date;
     public string $title;
     public string $page;
@@ -21,8 +22,7 @@ class JFTEntry {
         array $content,
         string $thought,
         string $copyright,
-    )
-    {
+    ) {
         $this->date = $date;
         $this->title = $title;
         $this->page = $page;
@@ -38,7 +38,8 @@ class JFTEntry {
         return json_encode($this);
     }
 
-    public function getHtml() {
+    public function getHtml()
+    {
         $thought = str_replace('Just for today: ', '', $this->thought);
         $paragraphs = "";
 
@@ -90,7 +91,8 @@ class JFTEntry {
 HTML;
     }
 
-    public function getCss() {
+    public function getCss()
+    {
         $paragraphs = "";
         $count = 1;
         foreach ($this->content as $c) {

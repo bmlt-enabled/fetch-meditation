@@ -8,7 +8,7 @@ use FetchMeditation\JFT;
 
 echo "JFT\n\n";
 
-$settings = new JFTSettings(['language' => "en"]);
+$settings = new JFTSettings(['language' => "es"]);
 $jft = new JFT($settings);
 $entry = $jft->fetch();
 print_r($entry->quote);

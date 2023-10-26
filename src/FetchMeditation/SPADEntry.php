@@ -2,7 +2,8 @@
 
 namespace FetchMeditation;
 
-class SPADEntry {
+class SPADEntry
+{
     public string $date;
     public string $title;
     public string $page;
@@ -21,8 +22,7 @@ class SPADEntry {
         array $content,
         string $thought,
         string $copyright,
-    )
-    {
+    ) {
         $this->date = $date;
         $this->title = $title;
         $this->page = $page;
@@ -38,7 +38,8 @@ class SPADEntry {
         return json_encode($this);
     }
 
-    public function getHtml() {
+    public function getHtml()
+    {
         $paragraphs = "";
         foreach ($this->content as $c) {
             $paragraph = str_replace("--", "&mdash;", $c);
@@ -78,7 +79,8 @@ class SPADEntry {
 HTML;
     }
 
-    public function getCss() {
+    public function getCss()
+    {
         $paragraphs = "";
         $count = 1;
         foreach ($this->content as $c) {
