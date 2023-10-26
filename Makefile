@@ -19,7 +19,9 @@ lint-fix: composer ## PHP Lint Fix
 
 .PHONY: test
 test: composer ## PHP Unit Tests
-	vendor/bin/phpunit tests/ConfigTest.php
+	vendor/bin/phpunit tests/JFTEntryTest.php
+	vendor/bin/phpunit tests/JFTTest.php
+	vendor/bin/phpunit tests/JFTSettingsTest.php
 
 .PHONY: docs
 docs:  ## Generate Docs

@@ -13,7 +13,7 @@ class JFT
     private string $language;
     public function __construct($settings = null)
     {
-        $this->language = $settings->language;
+        $this->language = $settings->language ?? 'en';
     }
 
     public function fetch()
@@ -45,6 +45,11 @@ class JFT
             'sv' => $this->getSwedish(),
             default => [],
         };
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->language;
     }
 
     private function httpGet(string $url): string
