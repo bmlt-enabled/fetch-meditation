@@ -1,3 +1,6 @@
+## 1.0.4 (October 27, 2023)
+* Fix for vendor autoload.
+
 ## 1.0.3 (October 27, 2023)
 * Small code changes.
 

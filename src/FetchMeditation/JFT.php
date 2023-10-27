@@ -2,8 +2,6 @@
 
 namespace FetchMeditation;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 abstract class JFT
 {
     protected JFTSettings $settings;
