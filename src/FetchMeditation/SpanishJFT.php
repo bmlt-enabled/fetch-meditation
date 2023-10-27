@@ -1,12 +1,10 @@
 <?php
 
-namespace FetchMeditation\Languages\JFT;
+namespace FetchMeditation;
 
-use FetchMeditation;
-use FetchMeditation\JFTEntry;
 use FetchMeditation\Utilities\HttpUtility;
 
-class SpanishLanguage
+class SpanishJFT extends JFT
 {
     public function fetch()
     {

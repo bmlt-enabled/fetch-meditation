@@ -1,14 +1,12 @@
 <?php
 
-namespace FetchMeditation\Languages\JFT;
+namespace FetchMeditation;
 
-use FetchMeditation;
-use FetchMeditation\JFTEntry;
 use FetchMeditation\Utilities\HttpUtility;
 
-class RussianLanguage
+class EnglishJFT extends JFT
 {
-    public function fetch()
+    public function fetch(): JFTEntry
     {
         $data = $this->getData();
         $entry = new JFTEntry(
@@ -26,12 +24,14 @@ class RussianLanguage
     private function getData(): array
     {
         libxml_use_internal_errors(true);
-        $data = HttpUtility::httpGet('https://na-russia.org/eg');
+        $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
         $doc = new \DOMDocument();
         $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
-        $jftKeys = ['date', 'title', 'quote', 'source', 'content', 'thought', 'page'];
+        $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
         $result = [];
         foreach ($doc->getElementsByTagName('td') as $i => $td) {
             if ($jftKeys[$i] === 'content') {
@@ -44,7 +44,7 @@ class RussianLanguage
                 $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
         }
-        $result['copyright'] = '';
+        $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
         return $result;
     }
 }

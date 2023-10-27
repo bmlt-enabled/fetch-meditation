@@ -1,12 +1,10 @@
 <?php
 
-namespace FetchMeditation\Languages\SPAD;
+namespace FetchMeditation;
 
-use FetchMeditation;
-use FetchMeditation\SPADEntry;
 use FetchMeditation\Utilities\HttpUtility;
 
-class EnglishLanguage
+class EnglishSPAD extends SPAD
 {
     public function fetch()
     {

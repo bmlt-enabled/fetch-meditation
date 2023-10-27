@@ -4,29 +4,21 @@ namespace FetchMeditation;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use FetchMeditation\Languages\SPAD\EnglishLanguage;
-
-class SPAD
+abstract class SPAD
 {
-    private string $language;
-    private $languageHandler;
+    protected SPADSettings $settings;
 
-    public function __construct($settings = null)
+    public function __construct(SPADSettings $settings)
     {
-        $this->language = $settings->language ?? 'en';
-        $this->languageHandler = match ($this->language) {
-            'en' => new EnglishLanguage(),
-            default => new EnglishLanguage(),
+        $this->settings = $settings;
+    }
+
+    abstract protected function fetch();
+
+    public static function getInstance(SPADSettings $settings)
+    {
+        return match ($settings->language) {
+            SPADLanguage::English => new EnglishSPAD($settings),
         };
-    }
-
-    public function fetch()
-    {
-        return $this->languageHandler->fetch();
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->language;
     }
 }
