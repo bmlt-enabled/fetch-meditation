@@ -21,6 +21,12 @@ class EnglishSPAD extends SPAD
         );
         return $entry;
     }
+
+    public function getLanguage(): SPADLanguage
+    {
+        return $this->settings->language;
+    }
+
     private function getData(): array
     {
         libxml_use_internal_errors(true);

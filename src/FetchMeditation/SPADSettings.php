@@ -2,11 +2,6 @@
 
 namespace FetchMeditation;
 
-enum SPADLanguage
-{
-    case English;
-}
-
 class SPADSettings
 {
     public readonly SPADLanguage $language;

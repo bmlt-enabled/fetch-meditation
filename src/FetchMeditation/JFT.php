@@ -15,6 +15,8 @@ abstract class JFT
 
     abstract protected function fetch();
 
+    abstract protected function getLanguage();
+
     public static function getInstance(JFTSettings $settings)
     {
         return match ($settings->language) {

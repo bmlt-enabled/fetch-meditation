@@ -4,7 +4,6 @@ namespace FetchMeditation\Utilities;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
 
 class HttpUtility
 {
