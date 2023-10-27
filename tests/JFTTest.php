@@ -8,30 +8,15 @@ class JFTTest extends TestCase
 {
     public function testConstructorWithLanguageSetting()
     {
-        $settings = new JFTSettings(['language' => 'es']);
-        $jft = new JFT($settings);
-        $this->assertEquals('es', $jft->getLanguage());
-    }
-
-    public function testConstructorWithoutLanguageSetting()
-    {
-        $jft = new JFT();
-        // default language is 'en'
-        $this->assertEquals('en', $jft->getLanguage());
-    }
-
-    public function testConstructorWithIvalidLanguageSetting()
-    {
-        $settings = new JFTSettings(['language' => 'de']);
-        $jft = new JFT($settings);
-        // default fallback language is 'en'
-        $this->assertEquals('en', $jft->getLanguage());
+        $settings = new JFTSettings(JFTLanguage::Spanish);
+        $jft = JFT::getInstance($settings);
+        $this->assertEquals(JFTLanguage::Spanish, $jft->getLanguage());
     }
 
     public function testFetch()
     {
-        $settings = new JFTSettings(['language' => 'en']);
-        $jft = new JFT($settings);
+        $settings = new JFTSettings(JFTLanguage::English);
+        $jft = JFT::getInstance($settings);
         $entry = $jft->fetch();
 
         // Check if $entry is an instance of JFTEntry and contains expected data types

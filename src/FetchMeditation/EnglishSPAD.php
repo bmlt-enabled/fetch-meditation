@@ -1,17 +1,15 @@
 <?php
 
-namespace FetchMeditation\Languages\JFT;
+namespace FetchMeditation;
 
-use FetchMeditation;
-use FetchMeditation\JFTEntry;
 use FetchMeditation\Utilities\HttpUtility;
 
-class RussianLanguage
+class EnglishSPAD extends SPAD
 {
     public function fetch()
     {
         $data = $this->getData();
-        $entry = new JFTEntry(
+        $entry = new SPADEntry(
             $data['date'],
             $data['title'],
             $data['page'],
@@ -23,28 +21,35 @@ class RussianLanguage
         );
         return $entry;
     }
+
+    public function getLanguage(): SPADLanguage
+    {
+        return $this->settings->language;
+    }
+
     private function getData(): array
     {
         libxml_use_internal_errors(true);
-        $data = HttpUtility::httpGet('https://na-russia.org/eg');
-        $doc = new \DOMDocument();
-        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
+        $data = HttpUtility::httpGet('https://spadna.org');
         libxml_clear_errors();
         libxml_use_internal_errors(false);
-        $jftKeys = ['date', 'title', 'quote', 'source', 'content', 'thought', 'page'];
+        $doc = new \DOMDocument();
+        $doc->loadHTML($data);
+        $spadKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'divider', 'thought', 'copyright'];
         $result = [];
         foreach ($doc->getElementsByTagName('td') as $i => $td) {
-            if ($jftKeys[$i] === 'content') {
+            $nodeValue = trim($td->nodeValue);
+            if ($spadKeys[$i] === 'content') {
                 $innerHTML = '';
                 foreach ($td->childNodes as $child) {
                     $innerHTML .= $td->ownerDocument->saveHTML($child);
                 }
-                $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
-            } else {
-                $result[$jftKeys[$i]] = trim($td->nodeValue);
+                $result['content'] = array_map('trim', preg_split('/<br\s*\/?>/', $innerHTML, -1, PREG_SPLIT_NO_EMPTY));
+            } elseif ($spadKeys[$i] !== 'divider') {
+                $result[$spadKeys[$i]] = $nodeValue;
             }
         }
-        $result['copyright'] = '';
+        $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
         return $result;
     }
 }

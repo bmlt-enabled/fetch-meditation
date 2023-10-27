@@ -1,17 +1,15 @@
 <?php
 
-namespace FetchMeditation\Languages\SPAD;
+namespace FetchMeditation;
 
-use FetchMeditation;
-use FetchMeditation\SPADEntry;
 use FetchMeditation\Utilities\HttpUtility;
 
-class EnglishLanguage
+class EnglishJFT extends JFT
 {
-    public function fetch()
+    public function fetch(): JFTEntry
     {
         $data = $this->getData();
-        $entry = new SPADEntry(
+        $entry = new JFTEntry(
             $data['date'],
             $data['title'],
             $data['page'],
@@ -23,29 +21,36 @@ class EnglishLanguage
         );
         return $entry;
     }
+
+    public function getLanguage(): JFTLanguage
+    {
+        return $this->settings->language;
+    }
+
     private function getData(): array
     {
         libxml_use_internal_errors(true);
-        $data = HttpUtility::httpGet('https://spadna.org');
+        $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
         libxml_clear_errors();
         libxml_use_internal_errors(false);
         $doc = new \DOMDocument();
-        $doc->loadHTML($data);
-        $spadKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'divider', 'thought', 'copyright'];
+        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
+        libxml_clear_errors();
+        libxml_use_internal_errors(false);
+        $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
         $result = [];
         foreach ($doc->getElementsByTagName('td') as $i => $td) {
-            $nodeValue = trim($td->nodeValue);
-            if ($spadKeys[$i] === 'content') {
+            if ($jftKeys[$i] === 'content') {
                 $innerHTML = '';
                 foreach ($td->childNodes as $child) {
                     $innerHTML .= $td->ownerDocument->saveHTML($child);
                 }
-                $result['content'] = array_map('trim', preg_split('/<br\s*\/?>/', $innerHTML, -1, PREG_SPLIT_NO_EMPTY));
-            } elseif ($spadKeys[$i] !== 'divider') {
-                $result[$spadKeys[$i]] = $nodeValue;
+                $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
+            } else {
+                $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
         }
-        $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
+        $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
         return $result;
     }
 }

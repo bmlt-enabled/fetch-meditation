@@ -1,12 +1,10 @@
 <?php
 
-namespace FetchMeditation\Languages\JFT;
+namespace FetchMeditation;
 
-use FetchMeditation;
-use FetchMeditation\JFTEntry;
 use FetchMeditation\Utilities\HttpUtility;
 
-class ItalianLanguage
+class ItalianJFT extends JFT
 {
     public function fetch()
     {
@@ -23,6 +21,12 @@ class ItalianLanguage
         );
         return $entry;
     }
+
+    public function getLanguage(): JFTLanguage
+    {
+        return $this->settings->language;
+    }
+
     private function getData(): array
     {
         libxml_use_internal_errors(true);

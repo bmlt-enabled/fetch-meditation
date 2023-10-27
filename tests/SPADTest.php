@@ -8,31 +8,16 @@ class SPADTest extends TestCase
 {
     public function testConstructorWithLanguageSetting()
     {
-        $settings = new SPADSettings(['language' => 'en']);
-        $jft = new SPAD($settings);
-        $this->assertEquals('en', $jft->getLanguage());
-    }
-
-    public function testConstructorWithoutLanguageSetting()
-    {
-        $jft = new SPAD();
-        // default language is 'en'
-        $this->assertEquals('en', $jft->getLanguage());
-    }
-
-    public function testConstructorWithIvalidLanguageSetting()
-    {
-        $settings = new SPADSettings(['language' => 'de']);
-        $jft = new SPAD($settings);
-        // default fallback language is 'en'
-        $this->assertEquals('en', $jft->getLanguage());
+        $settings = new SPADSettings(SPADLanguage::English);
+        $spad = SPAD::getInstance($settings);
+        $this->assertEquals(SPADLanguage::English, $spad->getLanguage());
     }
 
     public function testFetch()
     {
-        $settings = new SPADSettings(['language' => 'en']);
-        $jft = new SPAD($settings);
-        $entry = $jft->fetch();
+        $settings = new SPADSettings(SPADLanguage::English);
+        $spad = SPAD::getInstance($settings);
+        $entry = $spad->fetch();
 
         // Check if $entry is an instance of JFTEntry and contains expected data types
         $this->assertInstanceOf(SPADEntry::class, $entry);
