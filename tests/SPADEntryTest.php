@@ -30,7 +30,7 @@ class SPADEntryTest extends TestCase
         $this->assertIsString($entry->copyright);
     }
 
-    public function testSPADEntryStripTags()
+    public function testSPADEntryWithoutTags()
     {
         $entry = new SPADEntry(
             '2023-10-26',
@@ -44,7 +44,7 @@ class SPADEntryTest extends TestCase
         );
 
         // Check that html tags have been stripped
-        $this->assertEquals('Sample Title', $entry->stripTags()['title']);
+        $this->assertEquals('Sample Title', $entry->withoutTags()['title']);
     }
 
     public function testSPADEntryGetJson()

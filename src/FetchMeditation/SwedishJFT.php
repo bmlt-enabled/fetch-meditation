@@ -6,28 +6,12 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class SwedishJFT extends JFT
 {
-    public function fetch()
-    {
-        $data = $this->getData();
-        $entry = new JFTEntry(
-            $data['date'],
-            $data['title'],
-            $data['page'],
-            $data['quote'],
-            $data['source'],
-            $data['content'],
-            $data['thought'],
-            $data['copyright']
-        );
-        return $entry;
-    }
-
     public function getLanguage(): JFTLanguage
     {
         return $this->settings->language;
     }
 
-    private function getData(): array
+    public function fetch(): JFTEntry
     {
         libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://www.nasverige.org/dagens-text/');
@@ -37,7 +21,7 @@ class SwedishJFT extends JFT
         libxml_use_internal_errors(false);
         $xpath = new \DOMXpath($doc);
 
-        $content = [
+        $result = [
             'date' => '',
             'quote' => '',
             'source' => '',
@@ -51,37 +35,47 @@ class SwedishJFT extends JFT
         // Extract the date
         $dateElement = $xpath->query('//div[@class="border-bottom mb-4"]/p[@class="h3"]');
         if ($dateElement->length > 0) {
-            $content['date'] = trim($dateElement->item(0)->textContent);
+            $result['date'] = trim($dateElement->item(0)->textContent);
         }
 
         // Extract the title
         $dateElement = $xpath->query('//div[@class="border-bottom mb-4"]/h2');
         if ($dateElement->length > 0) {
-            $content['title'] = trim($dateElement->item(0)->textContent);
+            $result['title'] = trim($dateElement->item(0)->textContent);
         }
 
         // Extract the quote and source
         $quoteElement = $xpath->query('//p[@class="bg-lightBlue p-4 preamble"]');
         if ($quoteElement->length > 0) {
-            $content['quote'] = $quoteElement->item(0)->textContent;
-            $content['quote'] = preg_replace('/\s+/', ' ', $content['quote']);
-            $quoteParts = explode('/', $content['quote']);
-            $content['quote'] = trim($quoteParts[0]);
-            $content['source'] = trim(end($quoteParts));
+            $result['quote'] = $quoteElement->item(0)->textContent;
+            $result['quote'] = preg_replace('/\s+/', ' ', $result['quote']);
+            $quoteParts = explode('/', $result['quote']);
+            $result['quote'] = trim($quoteParts[0]);
+            $result['source'] = trim(end($quoteParts));
         }
 
         // Extract the thought
         $thoughtElement = $xpath->query('//div[@class="col-12 col-md-8 col-lg-6 pt-5"]/p[2]');
         if ($thoughtElement->length > 0) {
-            $content['thought'] = trim($thoughtElement->item(0)->textContent);
+            $result['thought'] = trim($thoughtElement->item(0)->textContent);
         }
 
         // Extract the content
-        $contentElement = $xpath->query('//div[@class="col-12 col-md-8 col-lg-6 pt-5"]/p[1]');
+        $resultElement = $xpath->query('//div[@class="col-12 col-md-8 col-lg-6 pt-5"]/p[1]');
         if ($thoughtElement->length > 0) {
-            $items = explode("\n", trim($contentElement->item(0)->textContent));
-            $content['content'] = array_filter($items, 'strlen');
+            $items = explode("\n", trim($resultElement->item(0)->textContent));
+            $result['content'] = array_filter($items, 'strlen');
         }
-        return $content;
+
+        return new JFTEntry(
+            $result['date'],
+            $result['title'],
+            $result['page'],
+            $result['quote'],
+            $result['source'],
+            $result['content'],
+            $result['thought'],
+            $result['copyright']
+        );
     }
 }

@@ -6,28 +6,12 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class EnglishJFT extends JFT
 {
-    public function fetch(): JFTEntry
-    {
-        $data = $this->getData();
-        $entry = new JFTEntry(
-            $data['date'],
-            $data['title'],
-            $data['page'],
-            $data['quote'],
-            $data['source'],
-            $data['content'],
-            $data['thought'],
-            $data['copyright']
-        );
-        return $entry;
-    }
-
     public function getLanguage(): JFTLanguage
     {
         return $this->settings->language;
     }
 
-    private function getData(): array
+    public function fetch(): JFTEntry
     {
         libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
@@ -51,6 +35,16 @@ class EnglishJFT extends JFT
             }
         }
         $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
-        return $result;
+
+        return new JFTEntry(
+            $result['date'],
+            $result['title'],
+            $result['page'],
+            $result['quote'],
+            $result['source'],
+            $result['content'],
+            $result['thought'],
+            $result['copyright']
+        );
     }
 }

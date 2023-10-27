@@ -6,28 +6,12 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class RussianJFT extends JFT
 {
-    public function fetch()
-    {
-        $data = $this->getData();
-        $entry = new JFTEntry(
-            $data['date'],
-            $data['title'],
-            $data['page'],
-            $data['quote'],
-            $data['source'],
-            $data['content'],
-            $data['thought'],
-            $data['copyright']
-        );
-        return $entry;
-    }
-
     public function getLanguage(): JFTLanguage
     {
         return $this->settings->language;
     }
 
-    private function getData(): array
+    public function fetch(): JFTEntry
     {
         libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://na-russia.org/eg');
@@ -49,6 +33,16 @@ class RussianJFT extends JFT
             }
         }
         $result['copyright'] = '';
-        return $result;
+
+        return new JFTEntry(
+            $result['date'],
+            $result['title'],
+            $result['page'],
+            $result['quote'],
+            $result['source'],
+            $result['content'],
+            $result['thought'],
+            $result['copyright']
+        );
     }
 }

@@ -38,7 +38,7 @@ class SPADEntry
         return json_encode((array)$this);
     }
 
-    public function stripTags(): array
+    public function withoutTags(): array
     {
         return array_map(function ($item) {
             if (is_array($item)) {
@@ -47,71 +47,5 @@ class SPADEntry
                 return strip_tags((string) $item);
             }
         }, (array)$this);
-    }
-
-    public function getHtml(): string
-    {
-        $paragraphs = "";
-        foreach ($this->content as $c) {
-            $paragraph = str_replace("--", "&mdash;", $c);
-            $paragraphs .= "<p>{$paragraph}</p>";
-        }
-
-        return <<<HTML
-<table align="center">
-    <tr>
-        <td align="left"><h2>{$this->date}</h2></td>
-    </tr>
-    <tr>
-        <td align="center"><h1>{$this->title}</h1></td>
-    </tr>
-    <tr>
-        <td align="center">{$this->page}<br><br></td>
-    </tr>
-    <tr>
-        <td align="left">{$this->quote}<br><br></td>
-    </tr>
-    <tr>
-        <td align="center">{$this->source}<br><br></td>
-    </tr>
-    <tr>
-        <td align="left">{$paragraphs}</td>
-    </tr>
-  <tr>
-        <td align="center">&mdash; &nbsp;  &nbsp; &mdash; &nbsp;  &nbsp; &mdash; &nbsp;  &nbsp; &mdash; &nbsp;  &nbsp; &mdash;<br><br></td>
-    </tr>    <tr>
-        <td align="left">{$this->thought}<br><br></td>
-    </tr>
-
-    <tr>
-        <td align="center">{$this->copyright}</td>
-    </tr>
-</table>
-HTML;
-    }
-
-    public function getCss(): string
-    {
-        $paragraphs = "";
-        $count = 1;
-        foreach ($this->content as $c) {
-            $paragraphs .= "<p id=\"spad-content-$count\" class=\"spad-rendered-element\">$c</p>";
-            $count++;
-        }
-
-        return <<<CSS
-<div id="spad-container" class="spad-rendered-element">
-    <div id="spad-date" class="spad-rendered-element">{$this->date}</div>
-    <div id="spad-title" class="spad-rendered-element">{$this->title}</div>
-    <div id="spad-page" class="spad-rendered-element">{$this->page}</div>
-    <div id="spad-quote" class="spad-rendered-element">{$this->quote}</div>
-    <div id="spad-quote-source" class="spad-rendered-element">{$this->source}</div>
-    <div id="spad-content" class="spad-rendered-element">
-    {$paragraphs}
-    </div>
-    <div id="spad-thought" class="spad-rendered-element">{$this->thought}</div>
-    <div id="spad-copyright" class="spad-rendered-element">{$this->copyright}</div>
-</div>
-CSS;
     }
 }

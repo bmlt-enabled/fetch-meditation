@@ -30,7 +30,7 @@ class JFTEntryTest extends TestCase
         $this->assertIsString($entry->copyright);
     }
 
-    public function testJFTEntryStripTags()
+    public function testJFTEntryWithoutTags()
     {
         $entry = new JFTEntry(
             '2023-10-26',
@@ -44,7 +44,7 @@ class JFTEntryTest extends TestCase
         );
 
         // Check that html tags have been stripped
-        $this->assertEquals('Sample Title', $entry->stripTags()['title']);
+        $this->assertEquals('Sample Title', $entry->withoutTags()['title']);
     }
 
     public function testJFTEntryGetJson()

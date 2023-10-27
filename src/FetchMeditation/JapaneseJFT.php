@@ -6,28 +6,12 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class JapaneseJFT extends JFT
 {
-    public function fetch()
-    {
-        $data = $this->getData();
-        $entry = new JFTEntry(
-            $data['date'],
-            $data['title'],
-            $data['page'],
-            $data['quote'],
-            $data['source'],
-            $data['content'],
-            $data['thought'],
-            $data['copyright']
-        );
-        return $entry;
-    }
-
     public function getLanguage(): JFTLanguage
     {
         return $this->settings->language;
     }
 
-    private function getData(): array
+    public function fetch(): JFTEntry
     {
         libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://najapan.org/just_for_today/');
@@ -37,7 +21,7 @@ class JapaneseJFT extends JFT
         libxml_use_internal_errors(false);
         $xpath = new \DOMXpath($doc);
 
-        $content = [
+        $result = [
             'date' => '',
             'quote' => '',
             'source' => '',
@@ -52,22 +36,22 @@ class JapaneseJFT extends JFT
         $h1Element = $xpath->query('//h2')->item(0);
         if ($h1Element !== null) {
             $dateParts = explode("　", $h1Element->textContent);
-            $content['date'] = trim($dateParts[0]);
-            $content['title'] = trim(end($dateParts));
+            $result['date'] = trim($dateParts[0]);
+            $result['title'] = trim(end($dateParts));
         }
 
         // Extract quote
         $p0Element = $xpath->query('//p')->item(0);
         if ($p0Element !== null) {
-            $content['quote'] = trim($p0Element->textContent);
+            $result['quote'] = trim($p0Element->textContent);
         }
 
         // Extract the source and page
         $p1Element = $xpath->query('//p')->item(1);
         if ($p1Element !== null) {
             $sourceParts = explode("　", $p1Element->textContent);
-            $content['source'] = trim($sourceParts[0]);
-            $content['page'] = count($sourceParts) > 0 ? trim(end($sourceParts)) : '';
+            $result['source'] = trim($sourceParts[0]);
+            $result['page'] = count($sourceParts) > 0 ? trim(end($sourceParts)) : '';
         }
 
         $pTags = $doc->getElementsByTagName('p');
@@ -76,13 +60,13 @@ class JapaneseJFT extends JFT
         // Extract the thought
         if ($pTagCount >= 2) {
             $thoughtPTag = $pTags->item($pTagCount - 2); // Get the second to last <p> tag
-            $content['thought'] = trim($thoughtPTag->textContent);
+            $result['thought'] = trim($thoughtPTag->textContent);
         }
 
         // Extract the copyright
         $centerTags = $doc->getElementsByTagName('center');
         if ($centerTags->length >= 0) {
-            $content['copyright'] = trim($centerTags->item(0)->textContent);
+            $result['copyright'] = trim($centerTags->item(0)->textContent);
         }
 
         // Extract the content
@@ -97,8 +81,18 @@ class JapaneseJFT extends JFT
                 $paragraphs[] .= trim($nextNode->textContent);
                 $nextNode = $nextNode->nextSibling;
             }
-            $content['content'] = array_values(array_filter($paragraphs));
+            $result['content'] = array_values(array_filter($paragraphs));
         }
-        return $content;
+
+        return new JFTEntry(
+            $result['date'],
+            $result['title'],
+            $result['page'],
+            $result['quote'],
+            $result['source'],
+            $result['content'],
+            $result['thought'],
+            $result['copyright']
+        );
     }
 }

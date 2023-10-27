@@ -6,28 +6,12 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class PortugueseJFT extends JFT
 {
-    public function fetch()
-    {
-        $data = $this->getData();
-        $entry = new JFTEntry(
-            $data['date'],
-            $data['title'],
-            $data['page'],
-            $data['quote'],
-            $data['source'],
-            $data['content'],
-            $data['thought'],
-            $data['copyright']
-        );
-        return $entry;
-    }
-
     public function getLanguage(): JFTLanguage
     {
         return $this->settings->language;
     }
 
-    private function getData(): array
+    public function fetch(): JFTEntry
     {
         libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://www.na.org.br/meditacao/');
@@ -68,21 +52,21 @@ class PortugueseJFT extends JFT
             $class = $element->getAttribute('class');
             switch ($class) {
                 case 'dat':
-                    $content['date'] = trim($element->nodeValue);
+                    $result['date'] = trim($element->nodeValue);
                     break;
                 case 'cit':
-                    $content['source'] = trim($element->nodeValue);
+                    $result['source'] = trim($element->nodeValue);
                     break;
                 case 'ef':
-                    $content['quote'] = trim($element->nodeValue);
+                    $result['quote'] = trim($element->nodeValue);
                     break;
                 case 'sph':
-                    $content['thought'] = trim($element->nodeValue);
-                    $content['thought'] = preg_replace('/\s+/', ' ', $content['thought']);
+                    $result['thought'] = trim($element->nodeValue);
+                    $result['thought'] = preg_replace('/\s+/', ' ', $result['thought']);
                     break;
                 case 'ct':
-                    $content['copyright'] = trim(str_replace("\n", "", $element->nodeValue));
-                    $content['copyright'] = preg_replace('/\s+/', ' ', $content['copyright']);
+                    $result['copyright'] = trim(str_replace("\n", "", $element->nodeValue));
+                    $result['copyright'] = preg_replace('/\s+/', ' ', $result['copyright']);
                     break;
             }
         }
@@ -91,12 +75,22 @@ class PortugueseJFT extends JFT
         foreach ($h1Elements as $element) {
             $class = $element->getAttribute('class');
             if ($class == 'tit') {
-                $content['title'] = trim($element->nodeValue);
+                $result['title'] = trim($element->nodeValue);
                 break;
             }
         }
-        $content['page'] = '';
-        $content['content'] = array_map('trim', $paragraphs);
-        return $content;
+        $result['page'] = '';
+        $result['content'] = array_map('trim', $paragraphs);
+
+        return new JFTEntry(
+            $result['date'],
+            $result['title'],
+            $result['page'],
+            $result['quote'],
+            $result['source'],
+            $result['content'],
+            $result['thought'],
+            $result['copyright']
+        );
     }
 }

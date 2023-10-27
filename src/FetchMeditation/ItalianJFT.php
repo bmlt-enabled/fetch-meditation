@@ -6,28 +6,12 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class ItalianJFT extends JFT
 {
-    public function fetch()
-    {
-        $data = $this->getData();
-        $entry = new JFTEntry(
-            $data['date'],
-            $data['title'],
-            $data['page'],
-            $data['quote'],
-            $data['source'],
-            $data['content'],
-            $data['thought'],
-            $data['copyright']
-        );
-        return $entry;
-    }
-
     public function getLanguage(): JFTLanguage
     {
         return $this->settings->language;
     }
 
-    private function getData(): array
+    public function fetch(): JFTEntry
     {
         libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://na-italia.org/get-jft');
@@ -40,7 +24,7 @@ class ItalianJFT extends JFT
 
         $paragraphs = $xpath->query('//p');
 
-        $result = [
+        $initialResult = [
             'quote' => '',
             'source' => '',
             'thought' => '',
@@ -50,16 +34,16 @@ class ItalianJFT extends JFT
 
         // Split the title and date parts
         $titleParts = explode(',', $data['title']);
-        $result['title'] = trim($titleParts[0]);
-        $result['date'] = trim(end($titleParts));
+        $initialResult['title'] = trim($titleParts[0]);
+        $initialResult['date'] = trim(end($titleParts));
 
         // Populate the result array with paragraph content
         foreach ($paragraphs as $index => $paragraph) {
             $key = ($index === 0) ? 'quote' : ($index + 1);
-            $result[$key] = $paragraph->textContent;
+            $initialResult[$key] = $paragraph->textContent;
         }
 
-        $resultArray = [
+        $result = [
             'content' => [],
             'thought' => '',
             'source' => '',
@@ -69,27 +53,37 @@ class ItalianJFT extends JFT
         $firstNumericKeyWithSource = null;
 
         // Iterate through the result array and categorize content
-        foreach ($result as $key => $value) {
+        foreach ($initialResult as $key => $value) {
             if (str_starts_with($value, '--')) {
                 $firstNumericKeyWithSource = $key;
-                $resultArray['source'] = substr($value, 2);
+                $result['source'] = substr($value, 2);
             }
             if (is_numeric($key)) {
                 $lastNumericKey = $key;
-                $resultArray['content'][$key] = $value;
-                $resultArray['thought'] = $value;
+                $result['content'][$key] = $value;
+                $result['thought'] = $value;
             } else {
-                $resultArray[$key] = $value;
+                $result[$key] = $value;
             }
         }
 
         // Remove unnecessary content entries
-        unset($resultArray['content'][$firstNumericKeyWithSource]);
-        unset($resultArray['content'][$lastNumericKey]);
-        $resultArray['content'] = array_values($resultArray['content']);
-        $quoteParts = explode('--', $resultArray['quote']);
-        $resultArray['quote'] = $quoteParts[0] ?? '';
-        $resultArray['source'] =  $quoteParts[1] ?? $resultArray['source'];
-        return $resultArray;
+        unset($result['content'][$firstNumericKeyWithSource]);
+        unset($result['content'][$lastNumericKey]);
+        $result['content'] = array_values($result['content']);
+        $quoteParts = explode('--', $result['quote']);
+        $result['quote'] = $quoteParts[0] ?? '';
+        $result['source'] =  $quoteParts[1] ?? $result['source'];
+
+        return new JFTEntry(
+            $result['date'],
+            $result['title'],
+            $result['page'],
+            $result['quote'],
+            $result['source'],
+            $result['content'],
+            $result['thought'],
+            $result['copyright']
+        );
     }
 }
