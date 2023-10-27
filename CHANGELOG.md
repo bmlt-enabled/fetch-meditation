@@ -1,3 +1,6 @@
+## 1.0.2 (October 26, 2023)
+* Restructured codebase, now requires PHP 8.1.
+
 ## 1.0.1 (October 26, 2023)
 * Add additional languages.
 
