@@ -17,7 +17,7 @@ abstract class JFT
 
     abstract protected function getLanguage();
 
-    public static function getInstance(JFTSettings $settings)
+    public static function getInstance(JFTSettings $settings): JFT
     {
         return match ($settings->language) {
             JFTLanguage::English => new EnglishJFT($settings),

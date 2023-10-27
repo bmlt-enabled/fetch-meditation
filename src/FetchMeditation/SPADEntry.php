@@ -33,7 +33,7 @@ class SPADEntry
         $this->copyright = $copyright;
     }
 
-    public function getJson(): string
+    public function toJson(): string
     {
         return json_encode((array)$this);
     }

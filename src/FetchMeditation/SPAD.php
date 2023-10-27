@@ -17,7 +17,7 @@ abstract class SPAD
 
     abstract protected function getLanguage();
 
-    public static function getInstance(SPADSettings $settings)
+    public static function getInstance(SPADSettings $settings): SPAD
     {
         return match ($settings->language) {
             SPADLanguage::English => new EnglishSPAD($settings),

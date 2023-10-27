@@ -19,8 +19,6 @@ class EnglishJFT extends JFT
         libxml_use_internal_errors(false);
         $doc = new \DOMDocument();
         $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
-        libxml_clear_errors();
-        libxml_use_internal_errors(false);
         $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
         $result = [];
         foreach ($doc->getElementsByTagName('td') as $i => $td) {
@@ -34,7 +32,7 @@ class EnglishJFT extends JFT
                 $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
         }
-        $result["copyright"] = preg_replace('/\s+/', ' ', str_replace("\n", "", $result["copyright"]));
+        $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
 
         return new JFTEntry(
             $result['date'],

@@ -2,9 +2,9 @@
 
 namespace FetchMeditation;
 
-class SPADSettings
+readonly class SPADSettings
 {
-    public readonly SPADLanguage $language;
+    public SPADLanguage $language;
 
     public function __construct(SPADLanguage $language)
     {

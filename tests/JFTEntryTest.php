@@ -47,7 +47,7 @@ class JFTEntryTest extends TestCase
         $this->assertEquals('Sample Title', $entry->withoutTags()['title']);
     }
 
-    public function testJFTEntryGetJson()
+    public function testJFTEntryToJson()
     {
         $entry = new JFTEntry(
             '2023-10-26',
@@ -60,7 +60,7 @@ class JFTEntryTest extends TestCase
             'Sample Copyright'
         );
 
-        $responseData = $entry->getJson();
+        $responseData = $entry->toJson();
         $decodedResponse = json_decode($responseData);
 
         if ($decodedResponse === null && json_last_error() !== JSON_ERROR_NONE) {
