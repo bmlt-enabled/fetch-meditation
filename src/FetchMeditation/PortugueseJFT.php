@@ -13,10 +13,10 @@ class PortugueseJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://www.na.org.br/meditacao/');
         $doc = new \DOMDocument();
-        $doc->loadHTML($data);
+        libxml_use_internal_errors(true);
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
         $xpath = new \DOMXPath($doc);

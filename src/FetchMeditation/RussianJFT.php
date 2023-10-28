@@ -13,10 +13,10 @@ class RussianJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://na-russia.org/eg');
         $doc = new \DOMDocument();
-        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
+        libxml_use_internal_errors(true);
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
         $jftKeys = ['date', 'title', 'quote', 'source', 'content', 'thought', 'page'];

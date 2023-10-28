@@ -13,12 +13,13 @@ class EnglishSPAD extends SPAD
 
     public function fetch(): SPADEntry
     {
-        libxml_use_internal_errors(true);
+
         $data = HttpUtility::httpGet('https://spadna.org');
+        $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
-        $doc = new \DOMDocument();
-        $doc->loadHTML($data);
         $spadKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'divider', 'thought', 'copyright'];
         $result = [];
         foreach ($doc->getElementsByTagName('td') as $i => $td) {

@@ -13,9 +13,9 @@ class JapaneseJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://najapan.org/just_for_today/');
         $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);

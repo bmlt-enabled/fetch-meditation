@@ -13,12 +13,12 @@ class EnglishJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+        $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
-        $doc = new \DOMDocument();
-        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);
         $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
         $result = [];
         foreach ($doc->getElementsByTagName('td') as $i => $td) {

@@ -1,3 +1,6 @@
+## 1.0.6 (October 28, 2023)
+* Fix suppression of html parsing warnings.
+
 ## 1.0.5 (October 28, 2023)
 * Fix for PHP 8.1 compatibility, rm readonly class.
 

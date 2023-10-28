@@ -13,11 +13,11 @@ class SpanishJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        libxml_use_internal_errors(true);
         $timezone = new \DateTimeZone('America/Mexico_City');
         $date = new \DateTime('now', $timezone);
         $data = HttpUtility::httpGet('https://forozonalatino.org/wp-content/uploads/meditaciones/' . $date->format('m/d') . '.html');
         $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="ISO-8859-1">' . $data);
         libxml_clear_errors();
         libxml_use_internal_errors(false);

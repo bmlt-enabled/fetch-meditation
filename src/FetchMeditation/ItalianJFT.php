@@ -13,10 +13,10 @@ class ItalianJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        libxml_use_internal_errors(true);
         $data = HttpUtility::httpGet('https://na-italia.org/get-jft');
         $data = json_decode($data, true)[0];
         $doc = new \DOMDocument();
+        libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' .  $data['content']);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
