@@ -2,7 +2,7 @@
 
 namespace FetchMeditation;
 
-readonly class SPADSettings
+class SPADSettings
 {
     public readonly SPADLanguage $language;
 
