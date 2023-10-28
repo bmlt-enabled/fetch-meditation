@@ -2,9 +2,9 @@
 
 namespace FetchMeditation;
 
-readonly class JFTSettings
+class JFTSettings
 {
-    public JFTLanguage $language;
+    public readonly JFTLanguage $language;
 
     public function __construct(JFTLanguage $language)
     {
