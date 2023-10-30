@@ -1,3 +1,6 @@
+## 1.0.7 (October 30, 2023)
+* Add additional languages.
+
 ## 1.0.6 (October 28, 2023)
 * Fix suppression of html parsing warnings.
 
