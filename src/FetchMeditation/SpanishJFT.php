@@ -31,7 +31,8 @@ class SpanishJFT extends JFT
 
             if ($paragraphNodes->length > 0) {
                 $paragraph = trim($paragraphNodes->item(0)->textContent);
-                $paragraphs[] = $paragraph;
+                $paragraphs[] = str_replace("\n", "", $paragraph);
+                ;
             }
         }
 
@@ -60,7 +61,7 @@ class SpanishJFT extends JFT
                     $result['title'] = $element->nodeValue;
                     break;
                 case 'descripcion-sxh':
-                    $result['quote'] = $element->nodeValue;
+                    $result['quote'] = str_replace("\n", "", $element->nodeValue);
                     break;
                 case 'numero-pagina-sxh':
                     $result['source'] = $element->nodeValue;

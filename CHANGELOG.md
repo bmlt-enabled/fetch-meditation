@@ -1,3 +1,6 @@
+## 1.0.9 (October 31, 2023)
+* Fixes for Spanish and German not stripping new lines.
+
 ## 1.0.8 (October 31, 2023)
 * Small fixes for Russian and Japanese.
 

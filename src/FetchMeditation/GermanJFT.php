@@ -39,7 +39,7 @@ class GermanJFT extends JFT
                         // Check if the child node is a <p> element
                         if ($contentNode->nodeName === 'p') {
                             // Add the <p> element's content to the sub-array
-                            $contentArray[] = trim($contentNode->nodeValue);
+                            $contentArray[] = str_replace("\n", "", trim($contentNode->nodeValue));
                         }
                     }
                     // Add the sub-array to the main array with "jft-content" as the key
