@@ -20,19 +20,31 @@ class RussianJFT extends JFT
         libxml_clear_errors();
         libxml_use_internal_errors(false);
         $jftKeys = ['date', 'title', 'quote', 'source', 'content', 'thought', 'page'];
-        $result = [];
-        foreach ($doc->getElementsByTagName('td') as $i => $td) {
-            if ($jftKeys[$i] === 'content') {
-                $innerHTML = '';
-                foreach ($td->childNodes as $child) {
-                    $innerHTML .= $td->ownerDocument->saveHTML($child);
+        $result = [
+            'date' => '',
+            'quote' => '',
+            'source' => '',
+            'thought' => '',
+            'content' => [],
+            'title' => '',
+            'page' => '',
+            'copyright' => '',
+        ];
+        $tables = $doc->getElementsByTagName('table');
+        if ($tables->length > 0) {
+            $firstTable = $tables->item(0);
+            foreach ($firstTable->getElementsByTagName('td') as $i => $td) {
+                if ($jftKeys[$i] === 'content') {
+                    $innerHTML = '';
+                    foreach ($td->childNodes as $child) {
+                        $innerHTML .= $td->ownerDocument->saveHTML($child);
+                    }
+                    $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
+                } else {
+                    $result[$jftKeys[$i]] = trim($td->nodeValue);
                 }
-                $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
-            } else {
-                $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
         }
-        $result['copyright'] = '';
 
         return new JFTEntry(
             $result['date'],
