@@ -1,3 +1,6 @@
+## 1.0.8 (October 31, 2023)
+* Small fixes for Russian and Japanese.
+
 ## 1.0.7 (October 30, 2023)
 * Add additional languages.
 

@@ -49,9 +49,7 @@ class JapaneseJFT extends JFT
         // Extract the source and page
         $p1Element = $xpath->query('//p')->item(1);
         if ($p1Element !== null) {
-            $sourceParts = explode("　", $p1Element->textContent);
-            $result['source'] = trim($sourceParts[0]);
-            $result['page'] = count($sourceParts) > 0 ? trim(end($sourceParts)) : '';
+            $result['source'] = trim($p1Element->textContent);
         }
 
         $pTags = $doc->getElementsByTagName('p');

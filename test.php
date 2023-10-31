@@ -10,15 +10,15 @@ use FetchMeditation\JFTLanguage;
 use FetchMeditation\JFTSettings;
 use FetchMeditation\JFT;
 
-$settings = new JFTSettings(JFTLanguage::English);
-$jft = JFT::getInstance($settings);
-$entry = $jft->fetch();
-echo $entry->quote;
-
+//$settings = new JFTSettings(JFTLanguage::English);
+//$jft = JFT::getInstance($settings);
+//$entry = $jft->fetch();
+//echo $entry->quote;
 
 
 foreach (JFTLanguage::cases() as $shape) {
     if ($shape->name == 'French') {
+        // French server is really slow
         continue;
     }
     echo "\n\n-=-=-=-=-=-=-=-= JFT - $shape->name -=-=-=-=-=-=-=-=\n\n";
