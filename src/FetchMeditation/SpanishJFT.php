@@ -76,6 +76,7 @@ class SpanishJFT extends JFT
         $result['page'] = '';
         $result['copyright'] = 'Servicio del Foro Zonal Latinoamericano, Copyright 2017 NA World Services, Inc. Todos los Derechos Reservados.';
         $result['thought']  = 'Sólo por Hoy: ' . trim($extractedThought);
+        $result['thought']  = str_replace("\n", "", $result['thought']);
 
         return new JFTEntry(
             $result['date'],

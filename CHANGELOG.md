@@ -1,3 +1,6 @@
+## 1.1.0 (November 1, 2023)
+* This makes content paragraph parsing for Portuguese slightly less brittle.
+
 ## 1.0.9 (October 31, 2023)
 * Fixes for Spanish and German not stripping new lines.
 

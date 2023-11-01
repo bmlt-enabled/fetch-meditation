@@ -21,31 +21,24 @@ class PortugueseJFT extends JFT
         libxml_use_internal_errors(false);
         $xpath = new \DOMXPath($doc);
 
-        $paragraphs = [];
-        // Find all <br> elements (line breaks)
-        $brElements = $xpath->query('//br');
-
-        // Loop through the line breaks to collect paragraphs
-        $currentParagraph = '';
-        foreach ($brElements as $brElement) {
-            $previousNode = $brElement->previousSibling;
-
-            // Collect text nodes until a new line break is encountered
-            while ($previousNode !== null && $previousNode->nodeName !== 'br') {
-                if ($previousNode->nodeType === XML_TEXT_NODE) {
-                    $currentParagraph = $previousNode->nodeValue . $currentParagraph;
+        $firstElement = $xpath->query('//p[@class="cit"]')->item(0);
+        $lastElement = $xpath->query('//p[@class="sph"]')->item(0);
+        $contentResult = '';
+        if ($firstElement && $lastElement) {
+            $node = $firstElement->nextSibling;
+            while ($node !== $lastElement) {
+                if ($node->nodeType === XML_ELEMENT_NODE) {
+                    $contentResult .= trim($doc->saveHTML($node));
+                } elseif ($node->nodeType === XML_TEXT_NODE) {
+                    $contentResult .= trim($node->nodeValue);
                 }
-                $previousNode = $previousNode->previousSibling;
-            }
-
-            // Add the collected paragraph to array and reset the current paragraph
-            if (!empty($currentParagraph)) {
-                $paragraphs[] = trim($currentParagraph);
-                $currentParagraph = '';
+                $node = $node->nextSibling;
             }
         }
+
+        $contentResult = strip_tags($contentResult, ['br', 'em', 'i', 'b']);
+        $paragraphs = explode('<br>', $contentResult);
         $paragraphs = array_values(array_filter($paragraphs));
-        array_pop($paragraphs);
 
         $fetchElements = $doc->getElementsByTagName('p');
         foreach ($fetchElements as $element) {
