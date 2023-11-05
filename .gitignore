@@ -9,3 +9,5 @@ build/
 docs/
 *.zip
 .phpdoc/
+__pycache__/
+venv/

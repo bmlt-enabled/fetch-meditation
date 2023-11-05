@@ -7,4 +7,5 @@ Makefile export-ignore
 /assets export-ignore
 /docs export-ignore
 /.github export-ignore
+/py export-ignore
 .phpcs.xml export-ignore
