@@ -74,6 +74,15 @@ class ItalianJFT extends JFT
         $quoteParts = explode('--', $result['quote']);
         $result['quote'] = $quoteParts[0] ?? '';
         $result['source'] =  $quoteParts[1] ?? $result['source'];
+        $result = array_map(function ($item) {
+            if (is_array($item)) {
+                return array_map(function ($paragraph) {
+                    return trim($paragraph, "\xC2\xA0");
+                }, $item);
+            } else {
+                return trim($item, "\xC2\xA0");
+            }
+        }, $result);
 
         return new JFTEntry(
             $result['date'],

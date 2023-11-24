@@ -73,7 +73,9 @@ class PortugueseJFT extends JFT
             }
         }
         $result['page'] = '';
-        $result['content'] = array_map('trim', $paragraphs);
+        $result['content'] = array_map(function ($paragraph) {
+            return trim(preg_replace('/\s+/u', ' ', $paragraph));
+        }, $paragraphs);
 
         return new JFTEntry(
             $result['date'],

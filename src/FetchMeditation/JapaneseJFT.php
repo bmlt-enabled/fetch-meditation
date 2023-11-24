@@ -79,7 +79,9 @@ class JapaneseJFT extends JFT
                 $paragraphs[] .= trim($nextNode->textContent);
                 $nextNode = $nextNode->nextSibling;
             }
-            $result['content'] = array_values(array_filter($paragraphs));
+            $result['content'] = array_map(function ($paragraph) {
+                return trim(preg_replace('/\s+/u', ' ', $paragraph));
+            }, array_values(array_filter($paragraphs)));
         }
 
         return new JFTEntry(
