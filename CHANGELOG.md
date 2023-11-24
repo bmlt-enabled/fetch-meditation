@@ -1,3 +1,6 @@
+## 1.1.1 (November 24, 2023)
+* Trim NBSP unicode for Portuguese, Italian and Japanese.
+
 ## 1.1.0 (November 1, 2023)
 * This makes content paragraph parsing for Portuguese slightly less brittle.
 
