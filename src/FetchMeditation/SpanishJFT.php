@@ -72,7 +72,7 @@ class SpanishJFT extends JFT
             }
         }
 
-        $result['content'] = $paragraphs;
+        $result['content'] = array_values(array_filter($paragraphs));
         $result['page'] = '';
         $result['copyright'] = 'Servicio del Foro Zonal Latinoamericano, Copyright 2017 NA World Services, Inc. Todos los Derechos Reservados.';
         $result['thought']  = 'Sólo por Hoy: ' . trim($extractedThought);
