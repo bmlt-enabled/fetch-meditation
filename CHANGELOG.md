@@ -1,3 +1,6 @@
+## 1.1.2 (November 26, 2023)
+* Remove spanish empty array elements.
+
 ## 1.1.1 (November 24, 2023)
 * Trim NBSP unicode for Portuguese, Italian and Japanese.
 
