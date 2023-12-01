@@ -1,3 +1,6 @@
+## 1.1.3 (December 1, 2023)
+* Remove empty content array elements.
+
 ## 1.1.2 (November 26, 2023)
 * Remove spanish empty array elements.
 

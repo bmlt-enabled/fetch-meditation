@@ -28,14 +28,25 @@ class JFTEntry
         $this->page = $page;
         $this->quote = $quote;
         $this->source = $source;
-        $this->content = $content;
+        $this->content = array_values(array_filter($content));
         $this->thought = $thought;
         $this->copyright = $copyright;
     }
 
     public function toJson(): string
     {
-        return json_encode((array)$this);
+        return json_encode(
+            [
+                'date' => $this->date,
+                'title' => $this->title,
+                'page' => $this->page,
+                'quote' => $this->quote,
+                'source' => $this->source,
+                'content' => $this->content,
+                'thought' => $this->thought,
+                'copyright' => $this->copyright
+            ]
+        );
     }
 
     public function withoutTags(): array

@@ -38,7 +38,6 @@ class PortugueseJFT extends JFT
 
         $contentResult = strip_tags($contentResult, ['br', 'em', 'i', 'b']);
         $paragraphs = explode('<br>', $contentResult);
-        $paragraphs = array_values(array_filter($paragraphs));
 
         $fetchElements = $doc->getElementsByTagName('p');
         foreach ($fetchElements as $element) {
