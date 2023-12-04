@@ -1,3 +1,6 @@
+## 1.1.4 (December 3, 2023)
+* Trim all elements.
+
 ## 1.1.3 (December 1, 2023)
 * Remove empty content array elements.
 

@@ -23,14 +23,14 @@ class SPADEntry
         string $thought,
         string $copyright,
     ) {
-        $this->date = $date;
-        $this->title = $title;
-        $this->page = $page;
-        $this->quote = $quote;
-        $this->source = $source;
-        $this->content = array_values(array_filter($content));
-        $this->thought = $thought;
-        $this->copyright = $copyright;
+        $this->date = trim($date);
+        $this->title = trim($title);
+        $this->page = trim($page);
+        $this->quote = trim($quote);
+        $this->source = trim($source);
+        $this->content = array_values(array_filter(array_map('trim', $content)));
+        $this->thought = trim($thought);
+        $this->copyright = trim($copyright);
     }
 
     public function toJson(): string
