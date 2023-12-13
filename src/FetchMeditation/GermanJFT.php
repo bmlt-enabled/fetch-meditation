@@ -13,7 +13,7 @@ class GermanJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://narcotics-anonymous.de/artikel/nur-fuer-heute/');
+        $data = HttpUtility::httpGet(JFTLanguage::German->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' .  $data);

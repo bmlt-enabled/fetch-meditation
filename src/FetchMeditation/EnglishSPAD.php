@@ -14,7 +14,7 @@ class EnglishSPAD extends SPAD
     public function fetch(): SPADEntry
     {
 
-        $data = HttpUtility::httpGet('https://spadna.org');
+        $data = HttpUtility::httpGet(SPADLanguage::English->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

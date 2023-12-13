@@ -13,7 +13,7 @@ class FrenchJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://jpa.narcotiquesanonymes.org/');
+        $data = HttpUtility::httpGet(JFTLanguage::French->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

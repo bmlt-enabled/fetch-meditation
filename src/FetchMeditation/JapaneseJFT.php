@@ -13,7 +13,7 @@ class JapaneseJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://najapan.org/just_for_today/');
+        $data = HttpUtility::httpGet(JFTLanguage::Japanese->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

@@ -13,7 +13,7 @@ class EnglishJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+        $data = HttpUtility::httpGet(JFTLanguage::English->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

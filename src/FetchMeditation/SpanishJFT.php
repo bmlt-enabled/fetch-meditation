@@ -15,7 +15,7 @@ class SpanishJFT extends JFT
     {
         $timezone = new \DateTimeZone('America/Mexico_City');
         $date = new \DateTime('now', $timezone);
-        $data = HttpUtility::httpGet('https://forozonalatino.org/wp-content/uploads/meditaciones/' . $date->format('m/d') . '.html');
+        $data = HttpUtility::httpGet(JFTLanguage::Spanish->url() . $date->format('m/d') . '.html');
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="ISO-8859-1">' . $data);

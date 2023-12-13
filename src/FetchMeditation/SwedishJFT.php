@@ -13,7 +13,7 @@ class SwedishJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://www.nasverige.org/dagens-text/');
+        $data = HttpUtility::httpGet(JFTLanguage::Swedish->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

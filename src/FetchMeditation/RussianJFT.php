@@ -13,7 +13,7 @@ class RussianJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://na-russia.org/eg');
+        $data = HttpUtility::httpGet(JFTLanguage::Russian->url());
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
