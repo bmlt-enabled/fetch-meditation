@@ -27,7 +27,6 @@ class SpanishJFT extends JFT
             if ($paragraphNodes->length > 0) {
                 $paragraph = trim($paragraphNodes->item(0)->textContent);
                 $paragraphs[] = str_replace("\n", "", $paragraph);
-                ;
             }
         }
 
