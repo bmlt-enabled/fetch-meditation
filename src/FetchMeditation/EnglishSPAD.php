@@ -6,11 +6,6 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class EnglishSPAD extends SPAD
 {
-    public function getLanguage(): SPADLanguage
-    {
-        return $this->settings->language;
-    }
-
     public function fetch(): SPADEntry
     {
 

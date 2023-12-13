@@ -13,7 +13,10 @@ abstract class SPAD
 
     abstract protected function fetch();
 
-    abstract protected function getLanguage();
+    public function getLanguage(): SPADLanguage
+    {
+        return $this->settings->language;
+    }
 
     public static function getInstance(SPADSettings $settings): SPAD
     {
