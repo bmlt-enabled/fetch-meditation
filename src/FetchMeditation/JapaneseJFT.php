@@ -6,11 +6,6 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class JapaneseJFT extends JFT
 {
-    public function getLanguage(): JFTLanguage
-    {
-        return $this->settings->language;
-    }
-
     public function fetch(): JFTEntry
     {
         $data = HttpUtility::httpGet('https://najapan.org/just_for_today/');

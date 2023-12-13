@@ -6,11 +6,6 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class SpanishJFT extends JFT
 {
-    public function getLanguage(): JFTLanguage
-    {
-        return $this->settings->language;
-    }
-
     public function fetch(): JFTEntry
     {
         $timezone = new \DateTimeZone('America/Mexico_City');

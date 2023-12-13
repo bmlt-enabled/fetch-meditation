@@ -6,11 +6,6 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class ItalianJFT extends JFT
 {
-    public function getLanguage(): JFTLanguage
-    {
-        return $this->settings->language;
-    }
-
     public function fetch(): JFTEntry
     {
         $data = HttpUtility::httpGet('https://na-italia.org/get-jft');

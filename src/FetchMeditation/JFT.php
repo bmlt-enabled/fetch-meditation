@@ -13,7 +13,10 @@ abstract class JFT
 
     abstract protected function fetch();
 
-    abstract protected function getLanguage();
+    public function getLanguage(): JFTLanguage
+    {
+        return $this->settings->language;
+    }
 
     public static function getInstance(JFTSettings $settings): JFT
     {
