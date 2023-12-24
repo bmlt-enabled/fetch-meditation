@@ -1,3 +1,6 @@
+## 1.1.5 (December 24, 2023)
+* Add WP get.
+
 ## 1.1.4 (December 3, 2023)
 * Trim all elements.
 
