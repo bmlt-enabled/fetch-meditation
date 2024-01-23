@@ -1,3 +1,6 @@
+## 1.1.6 (January 23, 2024)
+* Spanish language fix.
+
 ## 1.1.5 (December 24, 2023)
 * Add WP get.
 
