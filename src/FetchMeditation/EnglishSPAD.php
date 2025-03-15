@@ -6,10 +6,20 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class EnglishSPAD extends SPAD
 {
-    public function fetch(): SPADEntry
+    public function fetch(): SPADEntry | string
     {
 
-        $data = HttpUtility::httpGet('https://spadna.org');
+        try {
+            $data = HttpUtility::httpGet('https://spadna.org');
+        } catch (\Exception $e) {
+            try {
+                $data = HttpUtility::httpGet('https://na.org/spadna/');
+            } catch (\Exception $fallbackException) {
+                return "Error fetching data from both na.org/spadna and spadna.org. "
+                    . "Primary error: {$e->getMessage()}";
+            }
+        }
+
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
@@ -29,7 +39,14 @@ class EnglishSPAD extends SPAD
                 $result[$spadKeys[$i]] = $nodeValue;
             }
         }
-        $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
+
+        // If 'copyright' isn't set, supply a default value
+        if (!array_key_exists('copyright', $result)) {
+            $result['copyright'] = "Copyright (c) 2007-" . date("Y") . ", NA World Services, Inc. All Rights Reserved";
+        } else {
+            // If it exists, you may want to sanitize/clean it as you already do
+            $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
+        }
 
         return new SPADEntry(
             $result['date'],

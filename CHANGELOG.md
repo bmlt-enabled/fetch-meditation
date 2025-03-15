@@ -1,3 +1,7 @@
+## 1.1.7 (March 15, 2025)
+* Spanish language fix.
+* Added fallback jft/spad server.
+
 ## 1.1.6 (January 23, 2024)
 * Spanish language fix.
 

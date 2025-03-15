@@ -18,29 +18,30 @@ class SpanishJFT extends JFT
         libxml_use_internal_errors(false);
         $xpath = new \DOMXPath($doc);
 
-        // Get content
         $paragraphs = [];
-        for ($i = 1; $i <= 3; $i++) {
-            $query = "//p[preceding-sibling::comment()[contains(., 'PARRAFO $i')]]";
-            $paragraphNodes = $xpath->query($query);
+        $contentDiv = $xpath->query('//div[@id="content"]')->item(0);
 
-            if ($paragraphNodes->length > 0) {
-                $paragraph = trim($paragraphNodes->item(0)->textContent);
-                $paragraphs[] = str_replace("\n", "", $paragraph);
+        if ($contentDiv) {
+            // select all paragraphs within the content div except those with separa-sxh class
+            $paragraphNodes = $xpath->query('.//p[not(contains(@class, "separa-sxh"))]', $contentDiv);
+
+            foreach ($paragraphNodes as $node) {
+                // skip the "Sólo por hoy" paragraph and empty paragraphs
+                if (
+                    !preg_match('/^Sólo por hoy/i', trim($node->textContent)) &&
+                    !empty(trim($node->textContent)) &&
+                    !$node->getElementsByTagName('img')->length
+                ) {
+                    $paragraphs[] = str_replace("\n", "", trim($node->textContent));
+                }
             }
         }
 
-        // Get Thought
         $extractedThought = '';
-        $startComment = $xpath->query('//comment()[contains(., "SOLO X HOY insertar AQUI sin el Solo por Hoy")]')->item(0);
-        $endComment = $xpath->query('//comment()[contains(., "FIN SOLO X HOY")]')->item(0);
+        $thoughtNode = $xpath->query('//div[@id="content"]//p[contains(., "Sólo por hoy")]')->item(0);
 
-        if ($startComment && $endComment) {
-            $startNode = $startComment->nextSibling;
-            while ($startNode && $startNode !== $endComment) {
-                $extractedThought .= $doc->saveHTML($startNode);
-                $startNode = $startNode->nextSibling;
-            }
+        if ($thoughtNode) {
+            $extractedThought = trim($thoughtNode->textContent);
         }
 
         $result = [];
@@ -69,8 +70,12 @@ class SpanishJFT extends JFT
         $result['content'] = array_values(array_filter($paragraphs));
         $result['page'] = '';
         $result['copyright'] = 'Servicio del Foro Zonal Latinoamericano, Copyright 2017 NA World Services, Inc. Todos los Derechos Reservados.';
-        $result['thought']  = 'Sólo por Hoy: ' . trim($extractedThought);
-        $result['thought']  = str_replace("\n", "", $result['thought']);
+
+        if (!empty($extractedThought)) {
+            $result['thought'] = str_replace("\n", "", $extractedThought);
+        } else if (empty($result['thought'])) {
+            $result['thought'] = 'Sólo por Hoy: ';
+        }
 
         return new JFTEntry(
             $result['date'],

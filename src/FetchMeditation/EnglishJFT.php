@@ -6,9 +6,20 @@ use FetchMeditation\Utilities\HttpUtility;
 
 class EnglishJFT extends JFT
 {
-    public function fetch(): JFTEntry
+    public function fetch(): JFTEntry | string
     {
-        $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+
+        try {
+            $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+        } catch (\Exception $e) {
+            try {
+                $data = HttpUtility::httpGet('https://na.org/jftna/');
+            } catch (\Exception $fallbackException) {
+                return "Error fetching data from both na.org/jftna and jftna.org/jft. "
+                    . "Primary error: {$e->getMessage()}";
+            }
+        }
+
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
@@ -27,7 +38,14 @@ class EnglishJFT extends JFT
                 $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
         }
-        $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
+
+        // If 'copyright' isn't set, supply a default value
+        if (!array_key_exists('copyright', $result)) {
+            $result['copyright'] = "Copyright (c) 2007-" . date("Y") . ", NA World Services, Inc. All Rights Reserved";
+        } else {
+            // If it exists, you may want to sanitize/clean it as you already do
+            $result["copyright"] = preg_replace('/\s+|\n/', ' ', $result["copyright"]);
+        }
 
         return new JFTEntry(
             $result['date'],
