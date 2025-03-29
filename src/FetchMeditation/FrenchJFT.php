@@ -41,14 +41,18 @@ class FrenchJFT extends JFT
 
         // Extract the quote and source
         $quoteDiv = $xpath->query('//div[@class="chapo"]')->item(0);
-        $quotePTags = $quoteDiv->getElementsByTagName('p');
-        if ($quotePTags->length >= 2) {
-            $result['quote'] = trim($quotePTags->item(0)->textContent);
-            $result['source'] = trim($quotePTags->item(1)->textContent);
+        if ($quoteDiv) {
+            $quoteText = $quoteDiv->textContent;
+            // Split the text into quote and source
+            $parts = explode('Texte de base', $quoteText);
+            if (count($parts) >= 2) {
+                $result['quote'] = trim($parts[0]);
+                $result['source'] = 'Texte de base' . trim($parts[1]);
+            }
         }
 
         // Extract the thought
-        $thoughtElement = $xpath->query('//h3[@class="h3 spip"]');
+        $thoughtElement = $xpath->query('//h2[@class="spip"]');
         if ($thoughtElement->length > 0) {
             $result['thought'] = trim($thoughtElement->item(0)->textContent);
         }
@@ -59,6 +63,10 @@ class FrenchJFT extends JFT
             $result['content'] = [];
             $pTags = $textDiv->item(0)->getElementsByTagName('p');
             foreach ($pTags as $pTag) {
+                // Skip the last paragraph if it's the thought (it's already captured)
+                if ($pTag->textContent === $result['thought']) {
+                    continue;
+                }
                 $result['content'][] = trim($pTag->textContent);
             }
         }
