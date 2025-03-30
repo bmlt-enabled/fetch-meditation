@@ -22,6 +22,7 @@ abstract class SPAD
     {
         return match ($settings->language) {
             SPADLanguage::English => new EnglishSPAD($settings),
+            SPADLanguage::German => new GermanSPAD($settings),
         };
     }
 }
