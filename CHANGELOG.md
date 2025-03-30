@@ -1,3 +1,6 @@
+## 1.1.9  (March 30, 2025)
+* German SPAD.
+
 ## 1.1.8  (March 29, 2025)
 * French language fix.
 
