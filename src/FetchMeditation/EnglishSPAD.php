@@ -10,7 +10,7 @@ class EnglishSPAD extends SPAD
     {
 
         try {
-            $data = HttpUtility::httpGet('https://spadna.org');
+            $data = HttpUtility::httpGet('https://spad.na.org');
         } catch (\Exception $e) {
             try {
                 $data = HttpUtility::httpGet('https://na.org/spadna/');

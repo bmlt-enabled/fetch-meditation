@@ -9,3 +9,4 @@ build/
 docs/
 *.zip
 .phpdoc/
+.cursor/

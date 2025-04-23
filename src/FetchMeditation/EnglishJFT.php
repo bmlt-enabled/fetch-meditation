@@ -10,7 +10,7 @@ class EnglishJFT extends JFT
     {
 
         try {
-            $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+            $data = HttpUtility::httpGet('https://jft.na.org');
         } catch (\Exception $e) {
             try {
                 $data = HttpUtility::httpGet('https://na.org/jftna/');
