@@ -1,3 +1,7 @@
+## 1.2.0  (April 22, 2025)
+* Change JFT URLs.
+* Add optional timeZone setting for English JFT/SPAD.
+
 ## 1.1.9  (March 30, 2025)
 * German SPAD.
 

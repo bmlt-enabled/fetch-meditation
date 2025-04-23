@@ -8,18 +8,46 @@ class EnglishJFT extends JFT
 {
     public function fetch(): JFTEntry | string
     {
+        $params = [];
+        if ($this->settings->timeZone !== null) {
+            $params['timeZone'] = $this->settings->timeZone;
+        }
 
         try {
-            $data = HttpUtility::httpGet('https://www.jftna.org/jft/');
+            $data = $this->fetchFromUrl('https://jft.na.org', $params);
         } catch (\Exception $e) {
             try {
-                $data = HttpUtility::httpGet('https://na.org/jftna/');
+                $data = $this->fetchFromUrl('https://na.org/jftna/', $params);
             } catch (\Exception $fallbackException) {
                 return "Error fetching data from both na.org/jftna and jftna.org/jft. "
                     . "Primary error: {$e->getMessage()}";
             }
         }
 
+        return $this->parseData($data);
+    }
+
+    /**
+     * Fetch data from the given URL with parameters
+     *
+     * @param string $url The URL to fetch from
+     * @param array $params The parameters to pass
+     * @return string The fetched data
+     * @throws \Exception If there's an error fetching the data
+     */
+    protected function fetchFromUrl(string $url, array $params = []): string
+    {
+        return HttpUtility::httpGet($url, $params);
+    }
+
+    /**
+     * Parse the fetched data into a JFTEntry
+     *
+     * @param string $data The data to parse
+     * @return JFTEntry The parsed entry
+     */
+    protected function parseData(string $data): JFTEntry
+    {
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

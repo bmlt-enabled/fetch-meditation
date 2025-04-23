@@ -14,8 +14,12 @@ class HttpUtility
         'timeout' => 30
     ];
 
-    public static function httpGet(string $url): string
+    public static function httpGet(string $url, array $params = []): string
     {
+        if (!empty($params)) {
+            $url = self::appendQueryParams($url, $params);
+        }
+
         if (defined('WPINC')) {
             return self::wordpressGet($url);
         } else {
@@ -62,5 +66,19 @@ class HttpUtility
         } else {
             throw new \Exception('Received non-acceptable status code: ' . $response->getStatusCode());
         }
+    }
+
+    /**
+     * Append query parameters to a URL
+     *
+     * @param string $url The base URL
+     * @param array $params Associative array of parameters to append
+     * @return string URL with query parameters appended
+     */
+    private static function appendQueryParams(string $url, array $params): string
+    {
+        $queryString = http_build_query($params);
+        $separator = parse_url($url, PHP_URL_QUERY) ? '&' : '?';
+        return $url . $separator . $queryString;
     }
 }
