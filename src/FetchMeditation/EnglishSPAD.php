@@ -8,18 +8,46 @@ class EnglishSPAD extends SPAD
 {
     public function fetch(): SPADEntry | string
     {
+        $params = [];
+        if ($this->settings->timeZone !== null) {
+            $params['timeZone'] = $this->settings->timeZone;
+        }
 
         try {
-            $data = HttpUtility::httpGet('https://spad.na.org');
+            $data = $this->fetchFromUrl('https://spad.na.org', $params);
         } catch (\Exception $e) {
             try {
-                $data = HttpUtility::httpGet('https://na.org/spadna/');
+                $data = $this->fetchFromUrl('https://na.org/spadna/', $params);
             } catch (\Exception $fallbackException) {
                 return "Error fetching data from both na.org/spadna and spadna.org. "
                     . "Primary error: {$e->getMessage()}";
             }
         }
 
+        return $this->parseData($data);
+    }
+
+    /**
+     * Fetch data from the given URL with parameters
+     *
+     * @param string $url The URL to fetch from
+     * @param array $params The parameters to pass
+     * @return string The fetched data
+     * @throws \Exception If there's an error fetching the data
+     */
+    protected function fetchFromUrl(string $url, array $params = []): string
+    {
+        return HttpUtility::httpGet($url, $params);
+    }
+
+    /**
+     * Parse the fetched data into a SPADEntry
+     *
+     * @param string $data The data to parse
+     * @return SPADEntry The parsed entry
+     */
+    protected function parseData(string $data): SPADEntry
+    {
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
         $doc->loadHTML('<?xml encoding="UTF-8">' . $data);

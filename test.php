@@ -19,6 +19,15 @@ if (is_string($entry)) {
     echo $entry->toJson();
 }
 
+$settings = new JFTSettings(JFTLanguage::English, 'Australia/Sydney');
+$jft = JFT::getInstance($settings);
+$entry = $jft->fetch();
+if (is_string($entry)) {
+    echo "Error: {$entry}";
+} else {
+    echo $entry->toJson();
+}
+
 //foreach (JFTLanguage::cases() as $shape) {
 //    if ($shape->name == 'French') {
 //        // French server is really slow
