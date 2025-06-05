@@ -1,3 +1,7 @@
+## 1.2.1  (June 04, 2025)
+* Moved Portuguese translation to NA Portugal
+* Fixed Russian translation.
+
 ## 1.2.0  (April 22, 2025)
 * Change JFT URLs.
 * Add optional timeZone setting for English JFT/SPAD.
