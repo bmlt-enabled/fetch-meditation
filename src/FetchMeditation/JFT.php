@@ -11,7 +11,7 @@ abstract class JFT
         $this->settings = $settings;
     }
 
-    abstract protected function fetch();
+    abstract public function fetch();
 
     public function getLanguage(): JFTLanguage
     {

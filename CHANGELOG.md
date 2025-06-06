@@ -1,3 +1,6 @@
+## 1.2.2  (June 06, 2025)
+* Make abstract Fetch function Public.
+
 ## 1.2.1  (June 04, 2025)
 * Moved Portuguese translation to NA Portugal
 * Fixed Russian translation.
