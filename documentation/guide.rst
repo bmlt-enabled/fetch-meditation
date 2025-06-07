@@ -30,7 +30,12 @@ Here's a basic example of fetching a meditation::
     echo $data->page;      // Page reference
     echo $data->quote;     // Quote text
     echo $data->source;    // Quote source
-    echo $data->content;   // Main content
+    
+    // Content is an array of paragraphs
+    foreach ($data->content as $paragraph) {
+        echo $paragraph;    // Each paragraph of content
+    }
+    
     echo $data->thought;   // Just for Today thought
     echo $data->copyright; // Copyright info
 
@@ -64,7 +69,14 @@ Here's an example of displaying a complete meditation with HTML formatting::
     echo "<p><em>{$data->date}</em></p>\n";
     echo "<blockquote>{$data->quote}</blockquote>\n";
     echo "<cite>{$data->source}</cite>\n";
-    echo "<div class='content'>{$data->content}</div>\n";
+    
+    // Content is an array of paragraphs - display each in its own paragraph
+    echo "<div class='content'>\n";
+    foreach ($data->content as $paragraph) {
+        echo "  <p>{$paragraph}</p>\n";
+    }
+    echo "</div>\n";
+    
     echo "<p class='thought'>{$data->thought}</p>\n";
     echo "<footer>{$data->copyright}</footer>\n";
 
@@ -94,6 +106,6 @@ Properties available in the meditation entry:
 - ``page`` - Page reference
 - ``quote`` - Quote text
 - ``source`` - Quote source
-- ``content`` - Main content
+- ``content`` - Array of content paragraphs
 - ``thought`` - Just for Today thought
 - ``copyright`` - Copyright information 

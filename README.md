@@ -2,6 +2,8 @@
 
 * PHP library for reading and parsing daily meditations 
 
+* [Documentation](https://bmlt-enabled.github.io/fetch-meditation/)
+
 ### Basic Usage
 ```php
 require_once __DIR__ . '/vendor/autoload.php';
