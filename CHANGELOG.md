@@ -1,3 +1,6 @@
+## 1.2.4  (June 06, 2025)
+* Make SPAD abstract Fetch function Public.
+
 ## 1.2.3  (June 06, 2025)
 * Update footer text.
 
