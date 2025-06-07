@@ -1,3 +1,6 @@
+## 1.2.3  (June 06, 2025)
+* Update footer text.
+
 ## 1.2.2  (June 06, 2025)
 * Make abstract Fetch function Public.
 
