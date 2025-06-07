@@ -24,7 +24,7 @@ class FrenchJFT extends JFT
             'content' => [],
             'title' => '',
             'page' => '',
-            'copyright' => 'Copyright (c) ' . date("Y") . ', NA World Service, Inc. All Rights Reserved',
+            'copyright' => 'Copyright (c) ' . date("Y") . ', NA World Services, Inc. All Rights Reserved',
         ];
 
         // Extract the title
