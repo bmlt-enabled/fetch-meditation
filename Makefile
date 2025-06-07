@@ -21,7 +21,10 @@ fmt: composer ## PHP Format
 test: composer ## PHP Unit Tests
 	vendor/bin/phpunit tests
 
-
 .PHONY: docs
 docs:  ## Generate Docs
 	docker run --rm -v $(shell pwd):/data phpdoc/phpdoc:3 --ignore=vendor/ run -d src/ -t docs/
+
+.PHONY: docs-serve
+docs-serve: docs ## Serve documentation using PHP's built-in server
+	php -S localhost:8001 -t docs
