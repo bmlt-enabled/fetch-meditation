@@ -10,23 +10,23 @@ use FetchMeditation\JFTLanguage;
 use FetchMeditation\JFTSettings;
 use FetchMeditation\JFT;
 
-$settings = new JFTSettings(JFTLanguage::Spanish);
-$jft = JFT::getInstance($settings);
-$entry = $jft->fetch();
-if (is_string($entry)) {
-    echo "Error: {$entry}";
-} else {
-    echo $entry->toJson();
-}
+// $settings = new JFTSettings(JFTLanguage::Spanish);
+// $jft = JFT::getInstance($settings);
+// $entry = $jft->fetch();
+// if (is_string($entry)) {
+//     echo "Error: {$entry}";
+// } else {
+//     echo $entry->toJson();
+// }
 
-$settings = new JFTSettings(JFTLanguage::English, 'Australia/Sydney');
-$jft = JFT::getInstance($settings);
-$entry = $jft->fetch();
-if (is_string($entry)) {
-    echo "Error: {$entry}";
-} else {
-    echo $entry->toJson();
-}
+// $settings = new JFTSettings(JFTLanguage::English, 'Australia/Sydney');
+// $jft = JFT::getInstance($settings);
+// $entry = $jft->fetch();
+// if (is_string($entry)) {
+//     echo "Error: {$entry}";
+// } else {
+//     echo $entry->toJson();
+// }
 
 //foreach (JFTLanguage::cases() as $shape) {
 //    if ($shape->name == 'French') {
@@ -49,14 +49,11 @@ if (is_string($entry)) {
 //    print_r($entry->quote);
 //    echo "-- " . $spad->getLanguage()->name;
 //}
-
-//foreach (JFTLanguage::cases() as $shape) {
-//    if ($shape->name == 'French') {
-//        // French server is really slow
-//        continue;
-//    }
-//    $settings = new JFTSettings($shape);
-//    $jft = JFT::getInstance($settings);
-//    $entry = $jft->fetch();
-//    print_r($entry->toJson());
-//}
+$entries = [];
+foreach (JFTLanguage::cases() as $shape) {
+   $settings = new JFTSettings($shape);
+   $jft = JFT::getInstance($settings);
+   $entry = $jft->fetch();
+   $entries[$shape->name] = $entry;
+}
+echo json_encode($entries);
