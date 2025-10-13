@@ -1,3 +1,6 @@
+## 1.2.5  (October 13, 2025)
+* Moved Portuguese translation back to NA Brazil.
+
 ## 1.2.4  (June 06, 2025)
 * Make SPAD abstract Fetch function Public.
 
