@@ -13,18 +13,37 @@ class EnglishJFT extends JFT
             $params['timeZone'] = $this->settings->timeZone;
         }
 
-        try {
-            $data = $this->fetchFromUrl('https://jft.na.org', $params);
-        } catch (\Exception $e) {
+        $urls = ['https://jft.na.org', 'https://na.org/jftna/'];
+        $lastFetchError = null;
+        $lastParseError = null;
+
+        foreach ($urls as $url) {
             try {
-                $data = $this->fetchFromUrl('https://na.org/jftna/', $params);
-            } catch (\Exception $fallbackException) {
-                return "Error fetching data from both na.org/jftna and jftna.org/jft. "
-                    . "Primary error: {$e->getMessage()}";
+                $data = $this->fetchFromUrl($url, $params);
+
+                // Try to parse the data
+                try {
+                    return $this->parseData($data);
+                } catch (\Exception $parseException) {
+                    $lastParseError = $parseException;
+                    // Continue to next URL if parsing fails
+                    continue;
+                }
+            } catch (\Exception $fetchException) {
+                $lastFetchError = $fetchException;
+                // Continue to next URL if fetch fails
+                continue;
             }
         }
 
-        return $this->parseData($data);
+        // If we get here, all URLs failed
+        return json_encode([
+            'error' => 'all_sources_failed',
+            'message' => 'Failed to fetch or parse meditation data from all available sources.',
+            'fetch_error' => $lastFetchError ? $lastFetchError->getMessage() : null,
+            'parse_error' => $lastParseError ? $lastParseError->getMessage() : null,
+            'attempted_urls' => $urls
+        ]);
     }
 
     /**
@@ -45,26 +64,61 @@ class EnglishJFT extends JFT
      *
      * @param string $data The data to parse
      * @return JFTEntry The parsed entry
+     * @throws \Exception If parsing fails
      */
     protected function parseData(string $data): JFTEntry
     {
+        if (empty(trim($data))) {
+            throw new \Exception('Empty or whitespace-only data received from server');
+        }
+
         $doc = new \DOMDocument();
         libxml_use_internal_errors(true);
-        $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
+        $success = $doc->loadHTML('<?xml encoding="UTF-8">' . $data);
+        $errors = libxml_get_errors();
         libxml_clear_errors();
         libxml_use_internal_errors(false);
+
+        if (!$success) {
+            throw new \Exception('Failed to parse HTML content');
+        }
+
+        $tdElements = $doc->getElementsByTagName('td');
+        if ($tdElements->length === 0) {
+            throw new \Exception('No table data elements found in response - unexpected HTML structure');
+        }
+
         $jftKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought', 'copyright'];
+        $requiredKeys = ['date', 'title', 'page', 'quote', 'source', 'content', 'thought'];
         $result = [];
-        foreach ($doc->getElementsByTagName('td') as $i => $td) {
+
+        foreach ($tdElements as $i => $td) {
+            if ($i >= count($jftKeys)) {
+                break; // More elements than expected, ignore extras
+            }
+
             if ($jftKeys[$i] === 'content') {
                 $innerHTML = '';
                 foreach ($td->childNodes as $child) {
                     $innerHTML .= $td->ownerDocument->saveHTML($child);
                 }
-                $result['content'] = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
+                $content = preg_split('/<br\s*\/?>/', trim($innerHTML), -1, PREG_SPLIT_NO_EMPTY);
+                $result['content'] = array_filter(array_map('trim', $content), fn($item) => !empty($item));
             } else {
                 $result[$jftKeys[$i]] = trim($td->nodeValue);
             }
+        }
+
+        // Validate that all required keys are present
+        foreach ($requiredKeys as $key) {
+            if (!array_key_exists($key, $result)) {
+                throw new \Exception("Missing required field: {$key}. Found keys: " . implode(', ', array_keys($result)));
+            }
+        }
+
+        // Validate content array is not empty
+        if (empty($result['content'])) {
+            throw new \Exception('Content field is empty or contains no valid paragraphs');
         }
 
         // If 'copyright' isn't set, supply a default value

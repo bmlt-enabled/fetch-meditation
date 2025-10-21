@@ -1,3 +1,6 @@
+## 1.3.0  (October 21, 2025)
+* Better error handling for English JFT and SPAD.
+
 ## 1.2.6  (October 21, 2025)
 * Move SPAD url.
 
