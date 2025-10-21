@@ -51,9 +51,9 @@ use FetchMeditation\JFT;
 //}
 $entries = [];
 foreach (JFTLanguage::cases() as $shape) {
-   $settings = new JFTSettings($shape);
-   $jft = JFT::getInstance($settings);
-   $entry = $jft->fetch();
-   $entries[$shape->name] = $entry;
+    $settings = new JFTSettings($shape);
+    $jft = JFT::getInstance($settings);
+    $entry = $jft->fetch();
+    $entries[$shape->name] = $entry;
 }
 echo json_encode($entries);
