@@ -1,3 +1,6 @@
+## 1.2.6  (October 21, 2025)
+* Move SPAD url.
+
 ## 1.2.5  (October 13, 2025)
 * Moved Portuguese translation back to NA Brazil.
 

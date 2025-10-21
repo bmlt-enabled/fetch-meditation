@@ -14,10 +14,10 @@ class EnglishSPAD extends SPAD
         }
 
         try {
-            $data = $this->fetchFromUrl('https://spad.na.org', $params);
+            $data = $this->fetchFromUrl('https://na.org/spadna/', $params);
         } catch (\Exception $e) {
             try {
-                $data = $this->fetchFromUrl('https://na.org/spadna/', $params);
+                $data = $this->fetchFromUrl('https://spad.na.org', $params);
             } catch (\Exception $fallbackException) {
                 return "Error fetching data from both na.org/spadna and spadna.org. "
                     . "Primary error: {$e->getMessage()}";
