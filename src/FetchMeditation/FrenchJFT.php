@@ -42,12 +42,23 @@ class FrenchJFT extends JFT
         // Extract the quote and source
         $quoteDiv = $xpath->query('//div[@class="chapo"]')->item(0);
         if ($quoteDiv) {
-            $quoteText = $quoteDiv->textContent;
-            // Split the text into quote and source
-            $parts = explode('Texte de base', $quoteText);
-            if (count($parts) >= 2) {
-                $result['quote'] = trim($parts[0]);
-                $result['source'] = 'Texte de base' . trim($parts[1]);
+            $pTags = $quoteDiv->getElementsByTagName('p');
+            if ($pTags->length >= 2) {
+                // First <p> is the quote
+                $result['quote'] = trim($pTags->item(0)->textContent);
+                // Second <p> is the source
+                $result['source'] = trim($pTags->item(1)->textContent);
+            } elseif ($pTags->length === 1) {
+                // Fallback: try splitting by common patterns
+                $quoteText = $pTags->item(0)->textContent;
+                $parts = explode('Texte de base', $quoteText);
+                if (count($parts) >= 2) {
+                    $result['quote'] = trim($parts[0]);
+                    $result['source'] = 'Texte de base' . trim($parts[1]);
+                } else {
+                    // If no split pattern found, treat whole text as quote
+                    $result['quote'] = trim($quoteText);
+                }
             }
         }
 

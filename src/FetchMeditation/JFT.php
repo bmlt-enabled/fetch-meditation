@@ -27,6 +27,7 @@ abstract class JFT
             JFTLanguage::Italian => new ItalianJFT($settings),
             JFTLanguage::Japanese => new JapaneseJFT($settings),
             JFTLanguage::Portuguese => new PortugueseJFT($settings),
+            JFTLanguage::PortuguesePT => new PortuguesePTJFT($settings),
             JFTLanguage::Russian => new RussianJFT($settings),
             JFTLanguage::Spanish => new SpanishJFT($settings),
             JFTLanguage::Swedish => new SwedishJFT($settings),

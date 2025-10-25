@@ -2,15 +2,16 @@
 
 namespace FetchMeditation;
 
-enum JFTLanguage
+enum JFTLanguage: string
 {
-    case English;
-    case French;
-    case German;
-    case Italian;
-    case Japanese;
-    case Portuguese;
-    case Russian;
-    case Spanish;
-    case Swedish;
+    case English = 'en';
+    case French = 'fr';
+    case German = 'de';
+    case Italian = 'it';
+    case Japanese = 'ja';
+    case Portuguese = 'pt-BR';
+    case PortuguesePT = 'pt-PT';
+    case Russian = 'ru';
+    case Spanish = 'es';
+    case Swedish = 'sv';
 }

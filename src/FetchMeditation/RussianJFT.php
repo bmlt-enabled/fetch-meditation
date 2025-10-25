@@ -43,11 +43,10 @@ class RussianJFT extends JFT
 
     private function extractFromDOM(\DOMXPath $xpath, \DOMDocument $doc, array &$result): void
     {
-        // Extract date (e.g., "5 июня")
-        $dateNodes = $xpath->query('//div[contains(@class, "mt-4") and contains(@class, "text-md")]');
+        // Extract date - it has both text-secondary-blue and whitespace-nowrap classes and data-qa attribute
+        $dateNodes = $xpath->query('//div[contains(@class, "text-secondary-blue") and contains(@class, "whitespace-nowrap") and @data-qa="meditation-date"]');
         if ($dateNodes->length > 0) {
-            $text = trim($dateNodes->item(0)->textContent);
-            $result['date'] = $text;
+            $result['date'] = trim($dateNodes->item(0)->textContent);
         }
 
         // Extract title (e.g., "Честная молитва")
@@ -62,8 +61,8 @@ class RussianJFT extends JFT
             $result['quote'] = trim($quoteNodes->item(0)->textContent);
         }
 
-        // Extract source (e.g., "Базовый текст, с. 120")
-        $sourceNodes = $xpath->query('//div[contains(@class, "text-secondary-blue") and contains(@class, "whitespace-nowrap")]');
+        // Extract source - it has text-secondary-blue but NOT whitespace-nowrap
+        $sourceNodes = $xpath->query('//div[contains(@class, "text-secondary-blue") and contains(@class, "min-w-0") and contains(@class, "break-words")]');
         if ($sourceNodes->length > 0) {
             $result['source'] = trim($sourceNodes->item(0)->textContent);
         }

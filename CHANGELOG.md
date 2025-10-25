@@ -1,3 +1,6 @@
+## 1.3.1  (October 25, 2025)
+* Updated French, Portugal and Russian. Now supports multiple variants of a language.
+
 ## 1.3.0  (October 21, 2025)
 * Better error handling for English JFT and SPAD.
 
