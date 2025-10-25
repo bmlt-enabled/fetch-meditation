@@ -13,7 +13,7 @@ class EnglishSPAD extends SPAD
             $params['timeZone'] = $this->settings->timeZone;
         }
 
-        $urls = ['https://na.org/spadna/', 'https://spad.na.org'];
+        $urls = ['https://spad.na.org', 'https://na.org/spadna/'];
         $lastFetchError = null;
         $lastParseError = null;
 
