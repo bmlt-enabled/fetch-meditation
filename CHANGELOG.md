@@ -1,3 +1,6 @@
+## 1.3.2  (November 7, 2025)
+* German fixes for css id changes.
+
 ## 1.3.1  (October 25, 2025)
 * Updated French, Portugal and Russian. Now supports multiple variants of a language.
 

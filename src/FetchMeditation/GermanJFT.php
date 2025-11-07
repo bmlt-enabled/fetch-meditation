@@ -15,9 +15,9 @@ class GermanJFT extends JFT
         libxml_clear_errors();
         libxml_use_internal_errors(false);
         $xpath = new \DOMXPath($doc);
-        $container = $xpath->query('//div[@id="jft-container"]')->item(0);
-        // Find the div with id "jft-container"
-        $elements = array();
+        $container = $xpath->query('//div[@id="meditation-container"]')->item(0);
+        // Find the div with id "meditation-container"
+        $elements = [];
 
         // Loop through the child nodes of the container
         foreach ($container->childNodes as $node) {
@@ -25,11 +25,11 @@ class GermanJFT extends JFT
             if ($node->nodeType === XML_ELEMENT_NODE) {
                 // Get the ID of the element
                 $id = $node->getAttribute('id');
-                // Check if the ID is "jft-content"
-                if ($id === 'jft-content') {
-                    // Initialize an empty sub-array for "jft-content"
-                    $contentArray = array();
-                    // Loop through the child nodes of "jft-content"
+                // Check if the ID is "meditation-content"
+                if ($id === 'meditation-content') {
+                    // Initialize an empty sub-array for "meditation-content"
+                    $contentArray = [];
+                    // Loop through the child nodes of "meditation-content"
                     foreach ($node->childNodes as $contentNode) {
                         // Check if the child node is a <p> element
                         if ($contentNode->nodeName === 'p') {
@@ -37,7 +37,7 @@ class GermanJFT extends JFT
                             $contentArray[] = str_replace("\n", "", trim($contentNode->nodeValue));
                         }
                     }
-                    // Add the sub-array to the main array with "jft-content" as the key
+                    // Add the sub-array to the main array with "meditation-content" as the key
                     $elements[$id] = $contentArray;
                 } else {
                     // Add other elements to the array with their IDs as keys
@@ -47,15 +47,15 @@ class GermanJFT extends JFT
         }
         $elements['page'] = '';
         $elements['copyright'] = '';
-        $elements['jft-content'] = array_values(array_filter($elements['jft-content']));
+        $elements['meditation-content'] = array_values(array_filter($elements['meditation-content']));
         return new JFTEntry(
-            $elements['jft-date'],
-            $elements['jft-title'],
+            $elements['meditation-date'],
+            $elements['meditation-title'],
             $elements['page'],
-            $elements['jft-quote'],
-            $elements['jft-quote-source'],
-            $elements['jft-content'],
-            $elements['jft-thought'],
+            $elements['meditation-quote'],
+            $elements['meditation-quote-source'],
+            $elements['meditation-content'],
+            $elements['meditation-thought'],
             $elements['copyright']
         );
     }

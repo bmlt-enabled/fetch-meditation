@@ -36,7 +36,7 @@ class GermanSPAD extends SPAD
         }
 
         // Find the SPAD container inside the tab content
-        $container = $xpath->query('.//div[@id="jft-container"]', $spadTabContent)->item(0);
+        $container = $xpath->query('.//div[@id="meditation-container"]', $spadTabContent)->item(0);
         if (!$container) {
             throw new \Exception("SPAD container not found");
         }
@@ -49,11 +49,11 @@ class GermanSPAD extends SPAD
             if ($node->nodeType === XML_ELEMENT_NODE) {
                 // Get the ID of the element
                 $id = $node->getAttribute('id');
-                // Check if the ID is "jft-content"
-                if ($id === 'jft-content') {
-                    // Initialize an empty sub-array for "jft-content"
+                // Check if the ID is "meditation-content"
+                if ($id === 'meditation-content') {
+                    // Initialize an empty sub-array for "meditation-content"
                     $contentArray = array();
-                    // Loop through the child nodes of "jft-content"
+                    // Loop through the child nodes of "meditation-content"
                     foreach ($node->childNodes as $contentNode) {
                         // Check if the child node is a <p> element
                         if ($contentNode->nodeName === 'p') {
@@ -61,7 +61,7 @@ class GermanSPAD extends SPAD
                             $contentArray[] = $this->cleanText($contentNode->textContent);
                         }
                     }
-                    // Add the sub-array to the main array with "jft-content" as the key
+                    // Add the sub-array to the main array with "meditation-content" as the key
                     $elements[$id] = $contentArray;
                 } else {
                     // Add other elements to the array with their IDs as keys
@@ -75,16 +75,16 @@ class GermanSPAD extends SPAD
         $elements['copyright'] = 'Copyright © ' . date('Y') . ' by Narcotics Anonymous World Services, Inc. Alle Rechte vorbehalten.';
 
         // Clean up the content array
-        $elements['jft-content'] = array_values(array_filter($elements['jft-content']));
+        $elements['meditation-content'] = array_values(array_filter($elements['meditation-content']));
 
         return new SPADEntry(
-            $elements['jft-date'],
-            $elements['jft-title'],
+            $elements['meditation-date'],
+            $elements['meditation-title'],
             $elements['page'],
-            $elements['jft-quote'],
-            $elements['jft-quote-source'],
-            $elements['jft-content'],
-            $elements['jft-thought'],
+            $elements['meditation-quote'],
+            $elements['meditation-quote-source'],
+            $elements['meditation-content'],
+            $elements['meditation-thought'],
             $elements['copyright']
         );
     }

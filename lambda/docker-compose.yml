@@ -1,7 +1,0 @@
-services:
-  fetch-meditation-lambda:
-    build:
-      context: ..
-      dockerfile: lambda/Dockerfile
-    ports:
-      - "9000:8080"
