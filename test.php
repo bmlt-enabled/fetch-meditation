@@ -10,9 +10,9 @@ use FetchMeditation\JFTLanguage;
 use FetchMeditation\JFTSettings;
 use FetchMeditation\JFT;
 
-foreach (JFTLanguage::cases() as $language) {
-    echo $language->name . " (" . $language->value . ")\n";
-}
+//foreach (JFTLanguage::cases() as $language) {
+//    echo $language->name . " (" . $language->value . ")\n";
+//}
 
 // $settings = new JFTSettings(JFTLanguage::Spanish);
 // $jft = JFT::getInstance($settings);
@@ -44,15 +44,15 @@ foreach (JFTLanguage::cases() as $language) {
 //    print_r($entry->quote);
 //    echo "-- " . $jft->getLanguage()->name;
 //}
-//
+//$entries = [];
 //foreach (SPADLanguage::cases() as $shape) {
-//    echo "\n\n-=-=-=-=-=-=-=-= SPAD - $shape->name -=-=-=-=-=-=-=-=\n\n";
 //    $settings = new SPADSettings($shape);
 //    $spad = SPAD::getInstance($settings);
 //    $entry = $spad->fetch();
-//    print_r($entry->quote);
-//    echo "-- " . $spad->getLanguage()->name;
+//    $entries[$shape->name] = $entry;
 //}
+//echo json_encode($entries);
+//
 //$entries = [];
 //foreach (JFTLanguage::cases() as $shape) {
 //    $settings = new JFTSettings($shape);
