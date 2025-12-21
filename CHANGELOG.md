@@ -1,3 +1,6 @@
+## 1.3.3  (December 21, 2025)
+* Attempt to bust cache.
+
 ## 1.3.2  (November 7, 2025)
 * German fixes for css id changes.
 

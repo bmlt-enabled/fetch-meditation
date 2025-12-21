@@ -14,8 +14,12 @@ class HttpUtility
         'timeout' => 30
     ];
 
-    public static function httpGet(string $url, array $params = []): string
+    public static function httpGet(string $url, array $params = [], bool $cacheBusting = true): string
     {
+        if ($cacheBusting) {
+            $params['t'] = time();
+        }
+
         if (!empty($params)) {
             $url = self::appendQueryParams($url, $params);
         }
