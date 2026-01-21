@@ -45,7 +45,8 @@ class JFTEntry
                 'content' => $this->content,
                 'thought' => $this->thought,
                 'copyright' => $this->copyright
-            ]
+            ],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
     }
 
