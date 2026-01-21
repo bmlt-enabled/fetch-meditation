@@ -27,10 +27,15 @@ class ItalianJFT extends JFT
             'page' => '',
         ];
 
-        // Split the title and date parts
-        $titleParts = explode(',', $data['title']);
-        $initialResult['title'] = trim($titleParts[0]);
-        $initialResult['date'] = trim(end($titleParts));
+        // Split the title and date parts (split on last comma only)
+        $lastCommaPos = strrpos($data['title'], ',');
+        if ($lastCommaPos !== false) {
+            $initialResult['title'] = trim(substr($data['title'], 0, $lastCommaPos));
+            $initialResult['date'] = trim(substr($data['title'], $lastCommaPos + 1));
+        } else {
+            $initialResult['title'] = trim($data['title']);
+            $initialResult['date'] = '';
+        }
 
         // Populate the result array with paragraph content
         foreach ($paragraphs as $index => $paragraph) {
