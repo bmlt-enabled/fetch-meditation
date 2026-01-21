@@ -8,11 +8,18 @@ class ItalianJFT extends JFT
 {
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://na-italia.org/get-jft');
+        $params = [];
+        if ($this->settings->timeZone !== null) {
+            $params['tz'] = $this->settings->timeZone;
+        }
+
+        $data = HttpUtility::httpGet('https://na-italia.org/get-jft', $params);
         $data = json_decode($data, true)[0];
+
         $doc = new \DOMDocument();
+        $doc->encoding = 'UTF-8';
         libxml_use_internal_errors(true);
-        $doc->loadHTML('<?xml encoding="UTF-8">' .  $data['content']);
+        $doc->loadHTML('<?xml encoding="UTF-8">' . $data['content'], LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
         libxml_use_internal_errors(false);
         $xpath = new \DOMXPath($doc);
@@ -74,15 +81,6 @@ class ItalianJFT extends JFT
         $quoteParts = explode('--', $result['quote']);
         $result['quote'] = $quoteParts[0] ?? '';
         $result['source'] =  $quoteParts[1] ?? $result['source'];
-        $result = array_map(function ($item) {
-            if (is_array($item)) {
-                return array_map(function ($paragraph) {
-                    return trim($paragraph, "\xC2\xA0");
-                }, $item);
-            } else {
-                return trim($item, "\xC2\xA0");
-            }
-        }, $result);
 
         return new JFTEntry(
             $result['date'],
