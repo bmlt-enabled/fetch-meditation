@@ -58,55 +58,59 @@ class PortuguesePTJFT extends JFT
             libxml_use_internal_errors(false);
             $fullText = trim($tempDoc->textContent);
 
-            // Extract the quote (text between quotes) - may span multiple lines
-            if (preg_match('/"([^"]+)"/s', $fullText, $matches)) {
-                $result['quote'] = trim(preg_replace('/\s+/', ' ', $matches[1]));
-            }
-
-            // Split into lines
+            // Split into lines to look for quote pattern
             $lines = explode("\n", $fullText);
-
-            // Find where the quote ends and extract source
-            $quoteEndIndex = -1;
-            for ($i = 0; $i < count($lines); $i++) {
-                $line = trim($lines[$i]);
-                // Look for line with closing quote
-                if (preg_match('/"[^"]*"/', $line) && strpos($line, '"') !== false) {
-                    $quoteEndIndex = $i;
-                    // Get the next non-empty line as source
-                    for ($j = $i + 1; $j < count($lines); $j++) {
-                        $nextLine = trim($lines[$j]);
-                        if (!empty($nextLine) && !preg_match('/^"/', $nextLine)) {
-                            $result['source'] = $nextLine;
-                            break 2;
-                        }
-                    }
-                }
-            }
-
-            // Extract the main content (everything after the source)
-            $contentText = '';
+            $contentStartIndex = 0;
             $sourceLineIndex = -1;
 
-            // Find the source line index
+            // Look for opening quote pattern: line ending with " followed by source line
             for ($i = 0; $i < count($lines); $i++) {
-                if (trim($lines[$i]) === $result['source']) {
-                    $sourceLineIndex = $i;
+                $line = trim($lines[$i]);
+                // Check if line ends with opening quote
+                if (preg_match('/"\s*$/', $line)) {
+                    // Extract quoted text (everything before the quote mark)
+                    $result['quote'] = preg_replace('/\s*"\s*$/', '', $line);
+
+                    // Check next line for source
+                    if ($i + 1 < count($lines)) {
+                        $nextLine = trim($lines[$i + 1]);
+                        if (!empty($nextLine)) {
+                            $result['source'] = $nextLine;
+                            $sourceLineIndex = $i + 1;
+                        }
+                    }
+
+                    $contentStartIndex = $sourceLineIndex >= 0 ? $sourceLineIndex + 1 : $i + 1;
                     break;
                 }
             }
 
-            // Collect all content after source line
-            if ($sourceLineIndex >= 0) {
-                for ($i = $sourceLineIndex + 1; $i < count($lines); $i++) {
-                    $line = trim($lines[$i]);
-                    if (empty($line)) {
-                        continue;
+            // Also check for enclosed quote pattern "text"
+            if (empty($result['quote']) && preg_match('/"([^"]+)"/', $fullText, $quoteMatches)) {
+                $result['quote'] = trim($quoteMatches[1]);
+
+                // Remove quote from text to get remaining content
+                $contentWithoutQuote = preg_replace('/"[^"]+"\s*/', '', $fullText, 1);
+                $contentWithoutQuote = trim($contentWithoutQuote);
+
+                // Try to extract source from remaining text
+                $contentLines = explode("\n", $contentWithoutQuote);
+                if (!empty($contentLines)) {
+                    $firstLine = trim($contentLines[0]);
+                    if (!empty($firstLine) && strlen($firstLine) < 100 && preg_match('/^[^.]+[,.]\s*\d+|^[^.]+,\s*p\./', $firstLine)) {
+                        $result['source'] = $firstLine;
+                        $contentLines[0] = '';
                     }
-                    // Skip any additional quotes at the start of content
-                    if (strpos($line, '"') === 0 && preg_match('/^"[^"]+"\.$/', $line)) {
-                        continue;
-                    }
+                }
+                $lines = $contentLines;
+                $contentStartIndex = 0;
+            }
+
+            // Collect content from contentStartIndex onward
+            $contentText = '';
+            for ($i = $contentStartIndex; $i < count($lines); $i++) {
+                $line = trim($lines[$i]);
+                if (!empty($line)) {
                     if (!empty($contentText)) {
                         $contentText .= ' ';
                     }
@@ -116,6 +120,9 @@ class PortuguesePTJFT extends JFT
 
             if (!empty($contentText)) {
                 $result['content'] = [trim(preg_replace('/\s+/u', ' ', $contentText))];
+            } elseif (empty($result['quote'])) {
+                // No quote found, use entire content
+                $result['content'] = [trim(preg_replace('/\s+/u', ' ', $fullText))];
             }
         }
 
@@ -134,6 +141,14 @@ class PortuguesePTJFT extends JFT
             $result['copyright'] = trim(str_replace("\n", " ", $copyrightElement->nodeValue));
             $result['copyright'] = preg_replace('/\s+/', ' ', $result['copyright']);
         }
+
+        // Trim all string values
+        $result = array_map(function ($value) {
+            if (is_array($value)) {
+                return array_map('trim', $value);
+            }
+            return trim($value);
+        }, $result);
 
         return new JFTEntry(
             $result['date'],
