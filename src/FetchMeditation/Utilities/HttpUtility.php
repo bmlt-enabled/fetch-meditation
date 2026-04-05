@@ -14,7 +14,7 @@ class HttpUtility
         'timeout' => 30
     ];
 
-    public static function httpGet(string $url, array $params = [], bool $cacheBusting = true): string
+    public static function httpGet(string $url, array $params = [], bool $cacheBusting = false): string
     {
         if ($cacheBusting) {
             $params['t'] = time();
