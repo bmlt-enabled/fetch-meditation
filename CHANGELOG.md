@@ -1,3 +1,6 @@
+## 1.3.5  (April 5, 2026)
+* Remove cache-busting, made things worse.
+
 ## 1.3.4  (January 20, 2026)
 * Fix Italian encoding.
 
