@@ -1,3 +1,6 @@
+## 1.3.6  (August 22, 2026)
+* Fix Spanish JFT 403s from the Cloudflare bot challenge on fzla.org, retry with connection/cookie reuse.
+
 ## 1.3.5  (April 5, 2026)
 * Remove cache-busting, made things worse.
 

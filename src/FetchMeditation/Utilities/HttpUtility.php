@@ -3,16 +3,34 @@
 namespace FetchMeditation\Utilities;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Exception\GuzzleException;
 
 class HttpUtility
 {
     const HEADERS = [
         'headers' => [
-            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:105.0) Gecko/20100101 Firefox/105.0',
+            'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
+                . ' (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language' => 'en-US,en;q=0.9,es;q=0.8',
+            'Upgrade-Insecure-Requests' => '1',
         ],
         'timeout' => 30
     ];
+
+    const ACCEPTABLE_STATUS_CODES = [200, 302, 304];
+
+    /**
+     * Status codes worth a second try. Some sources (fzla.org) sit behind a bot
+     * challenge that 403s the first request on a cold connection, then lets the
+     * retry through once its cookie is presented back.
+     */
+    const RETRYABLE_STATUS_CODES = [403, 429, 500, 502, 503, 504];
+
+    const MAX_ATTEMPTS = 3;
+
+    const RETRY_DELAY_MICROSECONDS = 400000;
 
     public static function httpGet(string $url, array $params = []): string
     {
@@ -32,22 +50,37 @@ class HttpUtility
      */
     public static function wordpressGet(string $url): string
     {
-        $response = wp_remote_get($url, self::HEADERS);
+        $args = self::HEADERS;
+        $lastError = 'Error fetching data from server.';
 
-        if (is_wp_error($response)) {
-            throw new \Exception('Error fetching data from server: ' . $response->get_error_message());
+        for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
+            $response = wp_remote_get($url, $args);
+
+            if (is_wp_error($response)) {
+                $lastError = 'Error fetching data from server: ' . $response->get_error_message();
+                break;
+            }
+
+            $httpcode = wp_remote_retrieve_response_code($response);
+            if (in_array($httpcode, self::ACCEPTABLE_STATUS_CODES)) {
+                $data = wp_remote_retrieve_body($response);
+                if (empty($data)) {
+                    throw new \Exception('Error: Received empty data from server.');
+                }
+                return $data;
+            }
+
+            $lastError = 'Received non-acceptable status code: ' . $httpcode;
+            if (!in_array($httpcode, self::RETRYABLE_STATUS_CODES) || $attempt === self::MAX_ATTEMPTS) {
+                break;
+            }
+
+            // hand back whatever the challenge handed us, then try again
+            $args['cookies'] = wp_remote_retrieve_cookies($response);
+            usleep(self::RETRY_DELAY_MICROSECONDS);
         }
 
-        $httpcode = wp_remote_retrieve_response_code($response);
-        if (!in_array($httpcode, [200, 302, 304])) {
-            throw new \Exception('Received non-acceptable status code: ' . $httpcode);
-        }
-
-        $data = wp_remote_retrieve_body($response);
-        if (empty($data)) {
-            throw new \Exception('Error: Received empty data from server.');
-        }
-        return $data;
+        throw new \Exception($lastError);
     }
 
     /**
@@ -56,16 +89,28 @@ class HttpUtility
      */
     public static function guzzleGet(string $url): string
     {
-        $client = new Client();
-        $options = self::HEADERS;
+        // one client for all attempts so the connection and its cookies are reused
+        $jar = new CookieJar();
+        $client = new Client(['cookies' => $jar]);
+        $options = self::HEADERS + ['cookies' => $jar, 'http_errors' => false];
+        $statusCode = 0;
 
-        $response = $client->get($url, $options);
+        for ($attempt = 1; $attempt <= self::MAX_ATTEMPTS; $attempt++) {
+            $response = $client->get($url, $options);
+            $statusCode = $response->getStatusCode();
 
-        if (in_array($response->getStatusCode(), [200, 302, 304])) {
-            return $response->getBody()->getContents();
-        } else {
-            throw new \Exception('Received non-acceptable status code: ' . $response->getStatusCode());
+            if (in_array($statusCode, self::ACCEPTABLE_STATUS_CODES)) {
+                return $response->getBody()->getContents();
+            }
+
+            if (!in_array($statusCode, self::RETRYABLE_STATUS_CODES) || $attempt === self::MAX_ATTEMPTS) {
+                break;
+            }
+
+            usleep(self::RETRY_DELAY_MICROSECONDS);
         }
+
+        throw new \Exception('Received non-acceptable status code: ' . $statusCode);
     }
 
     /**
