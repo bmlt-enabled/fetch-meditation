@@ -1,8 +1,12 @@
 # Fetch Meditation
 
+[![Packagist Version](https://img.shields.io/packagist/v/bmlt/fetch-meditation)](https://packagist.org/packages/bmlt/fetch-meditation)
+
 * PHP library for reading and parsing daily meditations 
 
 * [Documentation](https://bmlt-enabled.github.io/fetch-meditation/)
+
+* [Packagist](https://packagist.org/packages/bmlt/fetch-meditation)
 
 ### Basic Usage
 ```php
