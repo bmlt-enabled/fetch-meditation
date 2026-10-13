@@ -1,3 +1,6 @@
+## 1.3.7  (October 12, 2026)
+* Add French (Canada / Québec) JFT variant, sourced from naquebec.org.
+
 ## 1.3.6  (August 22, 2026)
 * Fix Spanish JFT 403s from the Cloudflare bot challenge on fzla.org, retry with connection/cookie reuse.
 

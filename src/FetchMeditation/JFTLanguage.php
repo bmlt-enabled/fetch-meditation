@@ -6,6 +6,7 @@ enum JFTLanguage: string
 {
     case English = 'en';
     case French = 'fr';
+    case FrenchCA = 'fr-CA';
     case German = 'de';
     case Italian = 'it';
     case Japanese = 'ja';
