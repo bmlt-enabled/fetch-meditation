@@ -13,6 +13,15 @@ class JFTTest extends TestCase
         $this->assertEquals(JFTLanguage::Spanish, $jft->getLanguage());
     }
 
+    public function testDanishInstance()
+    {
+        $settings = new JFTSettings(JFTLanguage::Danish);
+        $jft = JFT::getInstance($settings);
+        $this->assertInstanceOf(DanishJFT::class, $jft);
+        $this->assertEquals(JFTLanguage::Danish, $jft->getLanguage());
+        $this->assertEquals('da', $jft->getLanguage()->value);
+    }
+
     public function testFrenchCaInstance()
     {
         $settings = new JFTSettings(JFTLanguage::FrenchCA);

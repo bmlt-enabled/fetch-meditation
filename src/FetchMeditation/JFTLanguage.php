@@ -5,6 +5,7 @@ namespace FetchMeditation;
 enum JFTLanguage: string
 {
     case English = 'en';
+    case Danish = 'da';
     case French = 'fr';
     case FrenchCA = 'fr-CA';
     case German = 'de';

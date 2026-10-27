@@ -22,6 +22,7 @@ abstract class JFT
     {
         return match ($settings->language) {
             JFTLanguage::English => new EnglishJFT($settings),
+            JFTLanguage::Danish => new DanishJFT($settings),
             JFTLanguage::French => new FrenchJFT($settings),
             JFTLanguage::FrenchCA => new FrenchCAJFT($settings),
             JFTLanguage::German => new GermanJFT($settings),

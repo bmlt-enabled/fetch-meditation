@@ -46,6 +46,7 @@ The library supports multiple languages::
 
     // Available languages:
     $settings = new JFTSettings(JFTLanguage::English);    // English
+    $settings = new JFTSettings(JFTLanguage::Danish);     // Danish
     $settings = new JFTSettings(JFTLanguage::Spanish);    // Spanish
     $settings = new JFTSettings(JFTLanguage::French);     // French
     $settings = new JFTSettings(JFTLanguage::FrenchCA);   // French (Canada / Québec)
