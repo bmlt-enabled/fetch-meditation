@@ -25,7 +25,7 @@ class DanishJFT extends JFT
 
     public function fetch(): JFTEntry
     {
-        $data = HttpUtility::httpGet('https://raw.githubusercontent.com/Narcotics-Anonymous-Danmark/App/0a93008aa804492dae195b529ad3c4ca6a473d0c/src/assets/data/jft.json');
+        $data = HttpUtility::httpGet('https://www.nadanmark.dk/jft.json');
         $entries = json_decode($data, true);
 
         $result = [

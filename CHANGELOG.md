@@ -1,3 +1,6 @@
+## 1.3.9  (October 27, 2026)
+* Update Danish link.
+
 ## 1.3.8  (October 27, 2026)
 * Add Danish JFT, sourced from nadanmark.dk.
 
